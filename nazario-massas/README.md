@@ -11,7 +11,8 @@ Requisitos: Node 20+.
 
 ```bash
 npm install
-npm run images        # baixa e otimiza as fotos (AVIF/WebP) — só na primeira vez
+npm run images        # baixa e otimiza as fotos (AVIF/WebP)
+npm run seo-assets    # ícones, imagem de compartilhamento e sitemap
 npm run dev           # API em :8787 + site em :5173
 ```
 
@@ -109,12 +110,25 @@ cobrados na entrega/retirada nesta versão; cartão online pode ser adicionado
 implementando `createCharge` para `card` em `apps/api/src/payments/asaas.ts`,
 sem tocar no checkout.
 
-## Deploy
+## Publicar na Vercel (demonstração: loja + painel)
+
+O repositório já tem `vercel.json`. Na Vercel: **Add New → Project →** importe
+este repositório → **Deploy** (não mude nada: instalação, build e pasta de saída
+vêm do `vercel.json`). O build baixa e otimiza as fotos sozinho.
+
+- Loja: `https://SEU-PROJETO.vercel.app/`
+- Painel: `https://SEU-PROJETO.vercel.app/#admin` — `admin@nazariomassas.com.br` / `nazario2026`
+
+Nessa versão a "API" roda no navegador: cada aparelho tem seus próprios
+pedidos (para testar o fluxo). Para pedidos reais chegando de vários clientes
+ao mesmo painel, use o deploy com servidor abaixo (ou migre para Supabase).
+
+## Deploy (produção, com servidor)
 
 Um único serviço Node serve a API e o site:
 
 ```bash
-npm ci && npm run images && npm run build
+npm install && npm run images && npm run seo-assets && npm run build
 cd apps/api && NODE_ENV=production node --env-file=.env dist/server.js
 ```
 

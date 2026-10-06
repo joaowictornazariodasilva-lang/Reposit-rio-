@@ -1,0 +1,7 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "cd nazario-massas && npm install --no-audit --no-fund",
+  "buildCommand": "cd nazario-massas && npm run images && npm run seo-assets && npm run build:demo",
+  "outputDirectory": "nazario-massas/apps/web/dist-demo",
+  "framework": null
+}

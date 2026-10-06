@@ -7,3 +7,8 @@
 - **.claude/skills/** — skills ativas para as sessões do Claude neste repositório.
 
 Instruções para o Claude: [CLAUDE.md](CLAUDE.md).
+
+## Publicar na Vercel
+
+Importe este repositório na Vercel e clique em **Deploy** — o `vercel.json` da raiz
+já aponta para `nazario-massas/`. Loja em `/`, painel em `/#admin`.

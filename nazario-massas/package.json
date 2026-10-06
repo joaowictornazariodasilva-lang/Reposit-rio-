@@ -1,0 +1,33 @@
+{
+  "name": "nazario-massas",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Nazário Massas — e-commerce de pizzas, massas e bebidas",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace @nazario/api & npm run dev --workspace @nazario/web",
+    "dev:api": "npm run dev --workspace @nazario/api",
+    "dev:web": "npm run dev --workspace @nazario/web",
+    "build": "npm run build --workspace @nazario/web && npm run build --workspace @nazario/api",
+    "start": "npm run start --workspace @nazario/api",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "images": "node scripts/fetch-images.mjs",
+    "hash-password": "node scripts/hash-password.mjs",
+    "test:e2e": "playwright test",
+    "seo-assets": "tsx scripts/generate-seo-assets.ts"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "1.56.1",
+    "sharp": "^0.35.5",
+    "tsx": "^4.20.6"
+  }
+}

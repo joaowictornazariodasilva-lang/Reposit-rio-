@@ -1,0 +1,219 @@
+@import 'tailwindcss';
+
+/*
+ * Nazário Massas — "Forno & Farinha" design system
+ * Every colour pair used for text is ≥ 4.5:1 (WCAG AA). See docs/DESIGN_SYSTEM.md.
+ */
+@theme {
+  /* Surfaces */
+  --color-flour: #f5efe4; /* page background — farinha */
+  --color-flour-deep: #ede4d3; /* sunken surfaces, skeletons */
+  --color-paper: #fbf8f2; /* cards, sheets */
+  --color-line: #ddd2bf; /* hairlines on light */
+  --color-line-strong: #c8baa2;
+
+  /* Ink */
+  --color-ink: #1c1714; /* 15.5:1 on flour */
+  --color-ink-soft: #4a3f37; /* 8.9:1 */
+  --color-ink-muted: #6e6053; /* 5.3:1 */
+
+  /* Brand */
+  --color-tomato: #b4321f; /* primary action — San Marzano */
+  --color-tomato-deep: #9a2a19;
+  --color-tomato-tint: #f6e1d9;
+  --color-ember: #e0612f; /* accent on dark */
+  --color-basil: #3e5b3a; /* vegetarian, success */
+  --color-basil-tint: #e3eadb;
+  --color-olive: #c9a55a; /* gilded detail on dark */
+  --color-olive-ink: #7a5812; /* gold text on light — 5.4:1 on its tint */
+
+  /* Oven (dark sections) */
+  --color-oven: #16110e;
+  --color-oven-raised: #221a15;
+  --color-oven-line: #3a2e26;
+  --color-ash: #b9ac9c; /* secondary text on oven, 8.4:1 */
+
+  /* Feedback */
+  --color-danger: #b4321f;
+  --color-warning: #7a5812;
+  --color-success: #3e5b3a;
+
+  --font-display: 'Fraunces Variable', 'Iowan Old Style', Georgia, serif;
+  --font-sans: 'Instrument Sans Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+
+  --shadow-soft: 0 1px 2px rgb(28 23 20 / 0.05), 0 4px 16px -6px rgb(28 23 20 / 0.12);
+  --shadow-lift: 0 2px 4px rgb(28 23 20 / 0.06), 0 18px 40px -16px rgb(28 23 20 / 0.28);
+  --shadow-sheet: 0 -8px 40px -12px rgb(28 23 20 / 0.35);
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --text-display: clamp(2.75rem, 7.2vw, 6.25rem);
+  --text-display--line-height: 0.95;
+  --text-display--letter-spacing: -0.035em;
+
+  --animate-marquee: marquee 38s linear infinite;
+}
+
+@keyframes marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+    scroll-padding-top: 6rem;
+    color-scheme: light;
+  }
+
+  body {
+    background-color: var(--color-flour);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-feature-settings: 'ss01', 'cv11';
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  .font-display {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+    font-variation-settings: 'SOFT' 50;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-tomato);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background: var(--color-tomato);
+    color: #fff;
+  }
+
+  button,
+  [role='button'],
+  a,
+  label[for],
+  summary {
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* Paper grain — a 1 KB inline SVG noise, painted once. */
+  .grain {
+    position: relative;
+    isolation: isolate;
+  }
+  .grain::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.35;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .38 0 0 0 0 .3 0 0 0 .18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .grain-dark::before {
+    mix-blend-mode: screen;
+    opacity: 0.25;
+  }
+
+  /* Small-caps editorial label: "Nº 01 — Pizzas" */
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .container-page {
+    width: 100%;
+    max-width: 82rem;
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+  @media (min-width: 640px) {
+    .container-page {
+      padding-inline: 1.5rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .container-page {
+      padding-inline: 2.5rem;
+    }
+  }
+
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.35s var(--ease-out-soft);
+  }
+  .link-underline:hover,
+  .link-underline:focus-visible {
+    background-size: 100% 1px;
+  }
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}

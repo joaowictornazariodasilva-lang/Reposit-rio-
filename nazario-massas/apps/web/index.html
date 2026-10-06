@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Nazário Massas — Pizzas de fermentação natural e massas frescas</title>
+    <meta name="description" content="Pizzas de longa fermentação assadas no forno a lenha e massas frescas feitas à mão todos os dias. Peça online para entrega ou retirada na Vila Madalena, São Paulo." />
+    <meta name="theme-color" content="#16110E" />
+    <link rel="canonical" href="https://nazariomassas.com.br/" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <!-- The menu request starts with the HTML instead of waiting for the JS bundle. -->
+    <link rel="preload" href="/api/catalog" as="fetch" crossorigin="anonymous" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content="Nazário Massas" />
+    <meta property="og:title" content="Nazário Massas — Pizzas de fermentação natural e massas frescas" />
+    <meta property="og:description" content="48 horas de fermentação, 90 segundos de forno a lenha. Peça online para entrega ou retirada." />
+    <meta property="og:url" content="https://nazariomassas.com.br/" />
+    <meta property="og:image" content="https://nazariomassas.com.br/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script>
+      // Preload the hero photo (LCP) only on the home page.
+      if (location.pathname === '/') {
+        var l = document.createElement('link');
+        l.rel = 'preload'; l.as = 'image'; l.type = 'image/avif'; l.fetchPriority = 'high';
+        l.imageSrcset = '/images/hero-forno-640.avif 640w, /images/hero-forno-1280.avif 1280w, /images/hero-forno-1920.avif 1920w';
+        l.imageSizes = '(min-width: 1024px) 58vw, 100vw';
+        document.head.appendChild(l);
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Restaurant",
+        "name": "Nazário Massas",
+        "url": "https://nazariomassas.com.br/",
+        "image": "https://nazariomassas.com.br/og-image.jpg",
+        "servesCuisine": ["Pizza", "Italiana", "Massas"],
+        "priceRange": "$$",
+        "telephone": "+55 11 3456-7890",
+        "hasMenu": "https://nazariomassas.com.br/cardapio",
+        "acceptsReservations": false,
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Rua dos Fornos, 148",
+          "addressLocality": "São Paulo",
+          "addressRegion": "SP",
+          "addressCountry": "BR"
+        },
+        "openingHoursSpecification": [{
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+          "opens": "18:00",
+          "closes": "23:30"
+        }],
+        "potentialAction": {
+          "@type": "OrderAction",
+          "target": "https://nazariomassas.com.br/cardapio",
+          "deliveryMethod": ["http://purl.org/goodrelations/v1#DeliveryModeOwnFleet", "http://purl.org/goodrelations/v1#DeliveryModePickUp"]
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>Ative o JavaScript para fazer seu pedido na Nazário Massas.</noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

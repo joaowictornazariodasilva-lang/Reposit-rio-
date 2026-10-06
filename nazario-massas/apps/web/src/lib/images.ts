@@ -7,6 +7,11 @@ export function isOptimizedImage(src: string): boolean {
   return src.startsWith('/images/') && !/\.[a-z]{3,4}$/i.test(src);
 }
 
+/** Resolves "/images/…" against the deploy base (the demo build is served from a sub-path). */
+export function assetUrl(path: string): string {
+  return path.startsWith('/') ? `${import.meta.env.BASE_URL}${path.slice(1)}` : path;
+}
+
 export function srcSet(base: string, format: 'avif' | 'webp', widths: readonly number[]): string {
-  return widths.map((w) => `${base}-${w}.${format} ${w}w`).join(', ');
+  return widths.map((w) => `${assetUrl(base)}-${w}.${format} ${w}w`).join(', ');
 }

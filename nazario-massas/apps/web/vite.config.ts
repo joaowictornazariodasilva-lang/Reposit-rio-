@@ -4,10 +4,20 @@ import tailwindcss from '@tailwindcss/vite';
 import { fileURLToPath } from 'node:url';
 
 const API_TARGET = process.env.API_TARGET ?? 'http://localhost:8787';
+/** `VITE_DEMO=1`: self-contained build (API simulated in the browser), served from a relative base. */
+const DEMO = process.env.VITE_DEMO === '1';
+const src = (p: string) => fileURLToPath(new URL(`./src/${p}`, import.meta.url));
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },
+  base: DEMO ? './' : '/',
+  resolve: {
+    alias: [
+      { find: /^@\/demo\/install$/, replacement: src(DEMO ? 'demo/install.ts' : 'demo/install-stub.ts') },
+      ...(DEMO ? [{ find: /^node:crypto$/, replacement: src('demo/crypto-shim.ts') }] : []),
+      { find: '@', replacement: fileURLToPath(new URL('./src', import.meta.url)) },
+    ],
+  },
   server: {
     port: 5173,
     host: true,
@@ -27,6 +37,7 @@ export default defineConfig({
   },
   build: {
     target: 'es2022',
+    outDir: DEMO ? 'dist-demo' : 'dist',
     cssCodeSplit: true,
     rollupOptions: {
       output: {

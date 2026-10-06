@@ -3,6 +3,7 @@ import { Route, Routes, useLocation, type Location } from 'react-router';
 import { StoreLayout, PageFallback } from '@/layouts/StoreLayout';
 import HomePage from '@/pages/HomePage';
 import { ProductPage, ProductSheet } from '@/features/catalog/ProductRoute';
+import { DEMO } from '@/lib/env';
 
 // Route-level code splitting: only the home page ships in the initial bundle.
 const MenuPage = lazy(() => import('@/pages/MenuPage'));
@@ -10,6 +11,7 @@ const CheckoutPage = lazy(() => import('@/pages/CheckoutPage'));
 const OrderPage = lazy(() => import('@/pages/OrderPage'));
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 const AdminApp = lazy(() => import('@/features/admin/AdminApp'));
+const DemoBanner = DEMO ? lazy(() => import('@/demo/DemoBanner')) : null;
 
 export default function App() {
   const location = useLocation();
@@ -37,6 +39,11 @@ export default function App() {
           }
         />
       </Routes>
+      {DemoBanner && (
+        <Suspense fallback={null}>
+          <DemoBanner />
+        </Suspense>
+      )}
       {background && (
         <Routes>
           <Route path="produto/:slug" element={<ProductSheet />} />

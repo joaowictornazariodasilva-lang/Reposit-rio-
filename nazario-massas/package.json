@@ -19,7 +19,8 @@
     "images": "node scripts/fetch-images.mjs",
     "hash-password": "node scripts/hash-password.mjs",
     "test:e2e": "playwright test",
-    "seo-assets": "tsx scripts/generate-seo-assets.ts"
+    "seo-assets": "tsx scripts/generate-seo-assets.ts",
+    "build:demo": "node scripts/build-demo.mjs"
   },
   "engines": {
     "node": ">=20"

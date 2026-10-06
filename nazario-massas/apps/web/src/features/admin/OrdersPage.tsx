@@ -11,6 +11,7 @@ import { ApiError } from '@/lib/api';
 import { cn } from '@/lib/cn';
 import { formatBRL, formatCep, formatPhone, formatTime, timeAgo } from '@/lib/format';
 import { toast } from '@/stores/ui';
+import { DEMO } from '@/lib/env';
 import { adminApi } from './session';
 import { useOrdersFeed } from './useOrdersFeed';
 import { NEXT_ACTION, PageHeader, PaymentBadge, StatusBadge } from './ui';
@@ -110,9 +111,9 @@ function OrderDetail({ order, onClose }: { order: Order; onClose: () => void }) 
           </p>
         </div>
         <div className="flex items-center gap-1">
-          <button type="button" onClick={() => window.print()} className="grid size-11 place-items-center rounded-full text-ink-soft hover:bg-ink/[0.06]" aria-label="Imprimir comanda">
+          {!DEMO && <button type="button" onClick={() => window.print()} className="grid size-11 place-items-center rounded-full text-ink-soft hover:bg-ink/[0.06]" aria-label="Imprimir comanda">
             <Printer className="size-5" aria-hidden />
-          </button>
+          </button>}
           <DialogClose onClose={onClose} tone="default" />
         </div>
       </div>

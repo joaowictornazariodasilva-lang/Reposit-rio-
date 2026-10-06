@@ -10,6 +10,7 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { ApiError } from '@/lib/api';
 import { cn } from '@/lib/cn';
 import { useSeo } from '@/lib/seo';
+import { DEMO, DEMO_ADMIN } from '@/lib/env';
 import { useAdminSession } from './session';
 import { useOrdersFeed, useOrdersPolling } from './useOrdersFeed';
 
@@ -30,8 +31,8 @@ function Loading() {
 
 function LoginPage() {
   const login = useAdminSession((s) => s.login);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState(DEMO ? DEMO_ADMIN.email : '');
+  const [password, setPassword] = useState(DEMO ? DEMO_ADMIN.password : '');
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState(false);
 

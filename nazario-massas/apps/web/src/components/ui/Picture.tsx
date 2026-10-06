@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { UtensilsCrossed } from 'lucide-react';
 import { cn } from '@/lib/cn';
-import { EDITORIAL_WIDTHS, isOptimizedImage, PRODUCT_WIDTHS, srcSet } from '@/lib/images';
+import { assetUrl, EDITORIAL_WIDTHS, isOptimizedImage, PRODUCT_WIDTHS, srcSet } from '@/lib/images';
+import { DEMO } from '@/lib/env';
 
 interface PictureProps {
   src?: string;
@@ -49,9 +50,10 @@ export function Picture({ src, alt, sizes, kind = 'product', width = 1, height =
         </div>
       ) : isOptimizedImage(src) ? (
         <picture>
-          <source type="image/avif" srcSet={srcSet(src, 'avif', widths)} sizes={sizes} />
+          {/* The demo bundle ships WebP only to stay light. */}
+          {!DEMO && <source type="image/avif" srcSet={srcSet(src, 'avif', widths)} sizes={sizes} />}
           <source type="image/webp" srcSet={srcSet(src, 'webp', widths)} sizes={sizes} />
-          <img src={`${src}-${widths[1]}.webp`} {...common} />
+          <img src={`${assetUrl(src)}-${widths[1]}.webp`} {...common} />
         </picture>
       ) : (
         <img src={src} {...common} />

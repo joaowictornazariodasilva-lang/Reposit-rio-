@@ -77,7 +77,7 @@ export function SiteHeader() {
   return (
     <header
       className={cn(
-        'fixed inset-x-0 top-0 z-40 transition-[background-color,box-shadow,backdrop-filter] duration-500',
+        'fixed inset-x-0 top-0 z-40 pt-[env(safe-area-inset-top,0px)] transition-[background-color,box-shadow,backdrop-filter] duration-500',
         overHero ? 'bg-transparent' : 'bg-flour/85 shadow-[0_1px_0_var(--color-line)] backdrop-blur-xl backdrop-saturate-150',
       )}
     >

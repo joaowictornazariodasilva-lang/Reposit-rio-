@@ -32,7 +32,7 @@ const groups: AddonGroup[] = [
   ] },
 ];
 const settings: StoreSettings = {
-  storeName: 'N', phone: '', whatsapp: '', address: '', hours: '', isOpen: true,
+  storeName: 'N', phone: '', whatsapp: '', address: '', hours: '', isOpen: true, deliveryEnabled: true,
   deliveryFee: 790, freeDeliveryFrom: 15000, minOrder: 3000, deliveryEstimate: '', pickupEstimate: '',
   coupons: [
     { code: 'BEMVINDO10', kind: 'percent', value: 10, minSubtotal: 6000, active: true, description: '' },

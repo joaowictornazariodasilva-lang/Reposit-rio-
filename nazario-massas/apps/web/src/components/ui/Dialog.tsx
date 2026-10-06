@@ -15,6 +15,8 @@ interface DialogProps {
   hideTitle?: boolean;
   description?: string;
   placement?: Placement;
+  /** Panel colour scheme — set here, never via className, so it can't be overridden by accident. */
+  surface?: 'paper' | 'oven';
   className?: string;
   children: ReactNode;
   /** Element to focus on open; defaults to the first focusable. */
@@ -62,7 +64,7 @@ const panelClass: Record<Placement, string> = {
  * Accessible modal: portal, focus trap, Esc to close, restores focus,
  * makes the page inert and locks scroll. Animations use transform/opacity only.
  */
-export function Dialog({ open, onClose, title, hideTitle, description, placement = 'center', className, children, initialFocus }: DialogProps) {
+export function Dialog({ open, onClose, title, hideTitle, description, placement = 'center', surface = 'paper', className, children, initialFocus }: DialogProps) {
   const panelRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
   const descriptionId = useId();
@@ -126,7 +128,7 @@ export function Dialog({ open, onClose, title, hideTitle, description, placement
             aria-labelledby={titleId}
             aria-describedby={description ? descriptionId : undefined}
             tabIndex={-1}
-            className={cn('relative z-10 flex flex-col overflow-hidden bg-paper shadow-sheet outline-none', panelClass[placement], className)}
+            className={cn('relative z-10 flex flex-col overflow-hidden shadow-sheet outline-none', surface === 'oven' ? 'bg-oven text-flour' : 'bg-paper text-ink', panelClass[placement], className)}
             {...panelMotion[placement]}
             transition={{ type: 'spring', stiffness: 380, damping: 38, mass: 0.9 }}
           >

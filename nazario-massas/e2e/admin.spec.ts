@@ -29,7 +29,7 @@ test('login → dashboard → new order → advance to completed', async ({ page
   const res = await request.post('/api/orders', {
     data: {
       customer: { name: 'João Pereira', phone: '11912345678' },
-      fulfillment: { type: 'delivery', address: { cep: '05433000', street: 'Rua Aspicuelta', number: '45', neighborhood: 'Vila Madalena', city: 'São Paulo' } },
+      fulfillment: { type: 'pickup' },
       items: [{ productId: 'prd_pepperoni', variantId: 'g', quantity: 1, addonOptionIds: ['borda-cheddar'], notes: 'Pouco molho' }],
       payment: { method: 'card' },
     },
@@ -43,8 +43,8 @@ test('login → dashboard → new order → advance to completed', async ({ page
 
   const detail = page.getByRole('dialog', { name: `Pedido #${created.number}` });
   await expect(detail.getByText('Pouco molho')).toBeVisible();
-  await expect(detail.getByText('Rua Aspicuelta, 45')).toBeVisible();
-  for (const action of ['Confirmar', 'Iniciar preparo', 'Marcar como pronto', 'Despachar', 'Concluir']) {
+  await expect(detail.getByText('O cliente vem buscar.')).toBeVisible();
+  for (const action of ['Confirmar', 'Iniciar preparo', 'Marcar como pronto', 'Concluir']) {
     await detail.getByRole('button', { name: new RegExp(`^${action}`) }).click();
     await expect(detail.getByRole('button', { name: new RegExp(`^${action}`) })).toHaveCount(0);
   }

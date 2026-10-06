@@ -43,8 +43,8 @@ export function Hero() {
             <SplitWords text="90 segundos de forno." className="mt-3 block text-[max(0.42em,1.75rem)] leading-tight tracking-[-0.02em] text-ember" delay={0.5} />
           </h1>
           <m.p className="mt-7 max-w-[34rem] text-[1.0625rem] leading-relaxed text-ash" {...fadeUp(0.7)}>
-            Pizzas napolitanas de borda alta e aerada, massas frescas feitas à mão todos os dias. Do nosso forno a lenha direto
-            para a sua mesa.
+            Pizzas napolitanas de borda alta e aerada, massas frescas feitas à mão todos os dias. Peça pelo site e retire
+            quentinho no nosso balcão.
           </m.p>
           <m.div className="mt-9 flex flex-col gap-3 sm:flex-row" {...fadeUp(0.85)}>
             <ButtonLink to="/cardapio" size="lg" icon={<ArrowRight className="size-5" aria-hidden />} className="flex-row-reverse">
@@ -62,11 +62,13 @@ export function Hero() {
               </span>
               <span className="font-semibold text-flour">{settings?.isOpen === false ? 'Fechado agora' : 'Aberto agora'}</span>
             </li>
+            {settings?.deliveryEnabled && (
+              <li className="flex items-center gap-2">
+                <Bike className="size-4" aria-hidden /> Entrega {settings.deliveryEstimate}
+              </li>
+            )}
             <li className="flex items-center gap-2">
-              <Bike className="size-4" aria-hidden /> Entrega {settings?.deliveryEstimate ?? '40–55 min'}
-            </li>
-            <li className="flex items-center gap-2">
-              <Store className="size-4" aria-hidden /> Retirada {settings?.pickupEstimate ?? '20–30 min'}
+              <Store className="size-4" aria-hidden /> Retirada no balcão em {settings?.pickupEstimate ?? '20–30 min'}
             </li>
           </m.ul>
         </div>

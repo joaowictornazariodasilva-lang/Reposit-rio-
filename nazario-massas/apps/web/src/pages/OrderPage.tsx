@@ -126,10 +126,12 @@ export default function OrderPage() {
                 <dt>Subtotal</dt>
                 <dd className="tabular">{formatBRL(order.subtotal)}</dd>
               </div>
-              <div className="flex justify-between text-ink-soft">
-                <dt>Entrega</dt>
-                <dd className="tabular">{order.deliveryFee ? formatBRL(order.deliveryFee) : 'Grátis'}</dd>
-              </div>
+              {order.fulfillment.type === 'delivery' && (
+                <div className="flex justify-between text-ink-soft">
+                  <dt>Entrega</dt>
+                  <dd className="tabular">{order.deliveryFee ? formatBRL(order.deliveryFee) : 'Grátis'}</dd>
+                </div>
+              )}
               {order.discount > 0 && (
                 <div className="flex justify-between text-basil">
                   <dt>Desconto {order.couponCode && `(${order.couponCode})`}</dt>

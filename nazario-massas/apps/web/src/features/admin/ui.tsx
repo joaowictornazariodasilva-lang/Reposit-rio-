@@ -66,11 +66,14 @@ export function PaymentBadge({ status }: { status: PaymentStatus }) {
   );
 }
 
-/** Primary action label for moving an order one step forward. */
-export const NEXT_ACTION: Partial<Record<OrderStatus, string>> = {
-  new: 'Confirmar',
-  confirmed: 'Iniciar preparo',
-  preparing: 'Marcar como pronto',
-  ready: 'Despachar',
-  out_for_delivery: 'Concluir',
-};
+/** Primary action label for moving an order one step forward (pickup orders are handed over at the counter). */
+export function nextActionLabel(order: { status: OrderStatus; fulfillment: { type: 'delivery' | 'pickup' } }): string | undefined {
+  const labels: Partial<Record<OrderStatus, string>> = {
+    new: 'Confirmar',
+    confirmed: 'Iniciar preparo',
+    preparing: 'Marcar como pronto',
+    ready: order.fulfillment.type === 'pickup' ? 'Concluir (cliente retirou)' : 'Despachar',
+    out_for_delivery: 'Concluir',
+  };
+  return labels[order.status];
+}

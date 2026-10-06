@@ -30,13 +30,15 @@ export function useCartSummary() {
     });
     const subtotal = items.reduce((sum, i) => sum + (i.priced?.lineTotal ?? 0), 0);
     const settings = data?.settings;
-    const freeFrom = settings?.freeDeliveryFrom ?? 0;
+    const deliveryEnabled = settings?.deliveryEnabled ?? false;
+    const freeFrom = deliveryEnabled ? (settings?.freeDeliveryFrom ?? 0) : 0;
     return {
       items,
       count: lines.reduce((n, l) => n + l.quantity, 0),
       subtotal,
       hasProblems: items.some((i) => i.problem),
-      deliveryFee: settings ? (freeFrom > 0 && subtotal >= freeFrom ? 0 : settings.deliveryFee) : 0,
+      deliveryEnabled,
+      deliveryFee: settings && deliveryEnabled ? (freeFrom > 0 && subtotal >= freeFrom ? 0 : settings.deliveryFee) : 0,
       freeDeliveryFrom: freeFrom,
       freeDeliveryRemaining: Math.max(0, freeFrom - subtotal),
       minOrder: settings?.minOrder ?? 0,

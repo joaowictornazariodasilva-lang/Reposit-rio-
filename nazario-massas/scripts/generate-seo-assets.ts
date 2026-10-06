@@ -24,7 +24,7 @@ const overlay = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="1200
   <text x="72" y="270" fill="#F5EFE4" font-family="Georgia, serif" font-size="76" font-style="italic">48 horas de</text>
   <text x="72" y="355" fill="#F5EFE4" font-family="Georgia, serif" font-size="76">fermentação.</text>
   <text x="72" y="470" fill="#E0612F" font-family="Georgia, serif" font-size="40">90 segundos de forno a lenha.</text>
-  <text x="72" y="560" fill="#B9AC9C" font-family="Helvetica, Arial, sans-serif" font-size="24">Peça online · entrega e retirada</text>
+  <text x="72" y="560" fill="#B9AC9C" font-family="Helvetica, Arial, sans-serif" font-size="24">Peça online · retire no balcão</text>
 </svg>`);
 await sharp(join(pub, 'images/hero-forno-1920.webp'))
   .resize(1200, 630, { fit: 'cover', position: 'right' })

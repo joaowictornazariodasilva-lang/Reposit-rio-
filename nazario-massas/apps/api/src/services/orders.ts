@@ -31,7 +31,8 @@ export function createOrderService(repos: Repositories, payments: PaymentProvide
   return {
     async quote(input: { items: CheckoutData['items']; fulfillment: 'delivery' | 'pickup'; couponCode?: string }): Promise<Quote> {
       const catalog = await loadPricingCatalog();
-      const priced = priceOrder(input.items, catalog, { fulfillment: input.fulfillment, couponCode: input.couponCode });
+      const fulfillment = catalog.settings.deliveryEnabled ? input.fulfillment : 'pickup';
+      const priced = priceOrder(input.items, catalog, { fulfillment, couponCode: input.couponCode });
       return {
         lines: priced.lines,
         subtotal: priced.subtotal,
@@ -50,6 +51,9 @@ export function createOrderService(repos: Repositories, payments: PaymentProvide
       const { settings } = catalog;
       if (!settings.isOpen) throw new DomainError('A loja está fechada no momento. Volte no nosso horário de funcionamento.', 409);
 
+      if (input.fulfillment.type === 'delivery' && !settings.deliveryEnabled) {
+        throw new DomainError('No momento trabalhamos apenas com retirada no local.');
+      }
       const priced = priceOrder(input.items, catalog, {
         fulfillment: input.fulfillment.type,
         couponCode: input.couponCode,

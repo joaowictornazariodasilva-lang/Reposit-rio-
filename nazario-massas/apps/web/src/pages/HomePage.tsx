@@ -129,7 +129,7 @@ function Favorites() {
 const STEPS = [
   { n: '01', title: 'Massa de 48 horas', text: 'Farinha italiana tipo 00, fermento natural e paciência. A massa descansa dois dias até ficar leve, aerada e fácil de digerir.' },
   { n: '02', title: 'Forno a lenha a 400 °C', text: 'Noventa segundos bastam para a borda alta, o fundo crocante e as marcas de leopardo que só o fogo de verdade entrega.' },
-  { n: '03', title: 'Do forno à sua porta', text: 'Embalagem térmica com respiro e entregadores próprios. Sua pizza chega como sai do forno — e não suada.' },
+  { n: '03', title: 'Pronta quando você chega', text: 'Peça pelo site e retire no balcão: a pizza sai do forno no horário combinado, em embalagem com respiro para manter a borda crocante.' },
 ];
 
 function Method() {
@@ -251,7 +251,7 @@ function OrderCta() {
               Escolha, personalize, pague com Pix.
             </h2>
             <p className="mt-5 max-w-lg text-white">
-              Sem cadastro e sem senha. Acompanhe seu pedido em tempo real, do forno até a sua porta.
+              Sem cadastro e sem senha. Acompanhe o preparo em tempo real e retire no balcão, sem fila.
             </p>
             <ButtonLink to="/cardapio" variant="light" size="lg" className="mt-8" icon={<ArrowRight className="size-5" aria-hidden />}>
               Montar meu pedido
@@ -266,7 +266,7 @@ function OrderCta() {
               <MapPin className="mt-0.5 size-4 shrink-0" aria-hidden />
               {settings?.address ?? 'Vila Madalena, São Paulo · SP'}
             </li>
-            {settings && settings.freeDeliveryFrom > 0 && (
+            {settings?.deliveryEnabled && settings.freeDeliveryFrom > 0 && (
               <li className="rounded-[var(--radius-md)] bg-white/10 px-4 py-3">
                 Entrega grátis em pedidos a partir de <strong className="tabular">{formatBRL(settings.freeDeliveryFrom)}</strong>.
               </li>
@@ -281,7 +281,7 @@ function OrderCta() {
 export default function HomePage() {
   useSeo({
     description:
-      'Pizzas de longa fermentação assadas no forno a lenha e massas frescas feitas à mão todos os dias. Peça online para entrega ou retirada na Vila Madalena, São Paulo.',
+      'Pizzas de longa fermentação assadas no forno a lenha e massas frescas feitas à mão todos os dias. Peça online e retire no balcão, na Vila Madalena, São Paulo.',
     path: '/',
   });
 

@@ -220,22 +220,13 @@ route(
 /* ─── Sample orders so the dashboard opens with something to look at ─── */
 async function seedSampleOrders() {
   const minutesAgo = (m: number) => new Date(Date.now() - m * 60_000).toISOString();
-  const address = (street: string, number: string, neighborhood: string) => ({
-    cep: '05433000',
-    street,
-    number,
-    complement: '',
-    neighborhood,
-    city: 'São Paulo · SP',
-    reference: '',
-  });
   const samples: { minutes: number; status: OrderStatus; paid?: boolean; input: Parameters<typeof orders.create>[0] }[] = [
     {
       minutes: 4,
       status: 'new',
       input: {
         customer: { name: 'Cliente exemplo · Ana', phone: '11900000001' },
-        fulfillment: { type: 'delivery', address: address('Rua Harmonia', '210', 'Vila Madalena') },
+        fulfillment: { type: 'pickup' },
         items: [
           { productId: 'prd_especial-nazario', variantId: 'g', quantity: 1, addonOptionIds: ['borda-catupiry'], notes: 'Cortar em mais fatias' },
           { productId: 'prd_coca-cola-2l', variantId: 'un', quantity: 1, addonOptionIds: [], notes: '' },
@@ -249,7 +240,7 @@ async function seedSampleOrders() {
       paid: true,
       input: {
         customer: { name: 'Cliente exemplo · Bruno', phone: '11900000002' },
-        fulfillment: { type: 'delivery', address: address('Rua Aspicuelta', '45', 'Vila Madalena') },
+        fulfillment: { type: 'pickup' },
         items: [
           { productId: 'prd_pepperoni', variantId: 'm', quantity: 1, addonOptionIds: [], notes: 'Pouco molho' },
           { productId: 'prd_spaghetti-carbonara', variantId: 'individual', quantity: 2, addonOptionIds: [], notes: '' },
@@ -259,10 +250,10 @@ async function seedSampleOrders() {
     },
     {
       minutes: 26,
-      status: 'out_for_delivery',
+      status: 'ready',
       input: {
         customer: { name: 'Cliente exemplo · Carla', phone: '11900000003' },
-        fulfillment: { type: 'delivery', address: address('Rua Fradique Coutinho', '1020', 'Pinheiros') },
+        fulfillment: { type: 'pickup' },
         items: [{ productId: 'prd_quatro-queijos', variantId: 'g', quantity: 2, addonOptionIds: [], notes: '' }],
         payment: { method: 'cash', changeFor: 25000 },
       },

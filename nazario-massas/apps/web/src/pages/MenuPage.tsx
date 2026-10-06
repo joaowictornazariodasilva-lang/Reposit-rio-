@@ -71,7 +71,7 @@ export default function MenuPage() {
     title: categoryInfo ? `${categoryInfo.name} — Cardápio` : 'Cardápio',
     description: categoryInfo
       ? `${categoryInfo.description} Peça online na Nazário Massas.`
-      : 'Pizzas de fermentação natural, massas frescas e bebidas. Escolha, personalize e peça online para entrega ou retirada.',
+      : 'Pizzas de fermentação natural, massas frescas e bebidas. Escolha, personalize, peça online e retire no balcão.',
     path: category ? `/cardapio/${category}` : '/cardapio',
   });
 

@@ -43,14 +43,14 @@ test('home → menu → pizza → cart → checkout → Pix → confirmation', a
 
   await page.getByLabel('Nome').fill('Maria Souza');
   await page.getByLabel('Telefone (WhatsApp)').fill('11987654321');
-  await page.getByLabel('CEP').fill('05435000');
-  await expect(page.getByLabel('Rua')).toHaveValue('Rua Harmonia');
-  await page.getByLabel('Número').fill('120');
+  // Pickup only: no address is asked.
+  await expect(page.getByLabel('CEP')).toHaveCount(0);
+  await expect(page.getByText('Você retira no nosso balcão')).toBeVisible();
   await page.locator('#coupon').fill('BEMVINDO10');
   await page.getByRole('button', { name: 'Aplicar' }).click();
   await expect(page.getByText('Cupom BEMVINDO10 aplicado.')).toBeVisible();
-  // 94 + 2×7 = 108; −10% = 97,20; + 7,90 delivery = 105,10
-  await expect(page.getByRole('button', { name: /Fazer pedido/ }).last()).toContainText('R$ 105,10');
+  // 94 + 2×7 = 108; −10% = 97,20; pickup has no fee
+  await expect(page.getByRole('button', { name: /Fazer pedido/ }).last()).toContainText('R$ 97,20');
   await page.getByRole('button', { name: /Fazer pedido/ }).last().click();
 
   // Confirmation + Pix
@@ -72,7 +72,6 @@ test('pickup + cash order with change', async ({ page }) => {
   await sheet.getByRole('button', { name: 'Aumentar quantidade' }).click();
   await sheet.getByRole('button', { name: /^Adicionar/ }).click();
   await page.goto('/checkout');
-  await page.getByText('Retirada no local').click();
   await expect(page.getByLabel('CEP')).toHaveCount(0);
   await page.getByLabel('Nome').fill('Carlos Lima');
   await page.getByLabel('Telefone (WhatsApp)').fill('11955554444');

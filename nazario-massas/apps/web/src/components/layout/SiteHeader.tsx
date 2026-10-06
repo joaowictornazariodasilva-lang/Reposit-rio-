@@ -137,13 +137,13 @@ export function SiteHeader() {
         </div>
       </div>
 
-      <Dialog open={menuOpen} onClose={() => setMenuOpen(false)} title="Menu" hideTitle placement="right" className="bg-oven text-flour">
+      <Dialog open={menuOpen} onClose={() => setMenuOpen(false)} title="Menu" hideTitle placement="right" surface="oven">
         <div className="flex items-center justify-between px-5 pt-4">
           <Logo tone="light" />
           <DialogClose onClose={() => setMenuOpen(false)} className="bg-oven-raised text-flour hover:bg-oven-line" />
         </div>
         <nav aria-label="Menu móvel" className="mt-10 flex flex-col px-5">
-          {[{ to: '/cardapio', label: 'Cardápio completo' }, ...NAV].map((item, i) => (
+          {[{ to: '/', label: 'Início' }, { to: '/cardapio', label: 'Cardápio completo' }, ...NAV].map((item, i) => (
             <m.div
               key={item.to}
               initial={{ opacity: 0, x: 24 }}

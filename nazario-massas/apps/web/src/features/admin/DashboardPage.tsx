@@ -7,6 +7,7 @@ import { CountUp } from '@/components/ui/AnimatedNumber';
 import { EmptyState, ErrorState, Skeleton } from '@/components/ui/Feedback';
 import { formatBRL, timeAgo } from '@/lib/format';
 import { adminApi } from './session';
+import { useCatalog } from '@/stores/catalog';
 import { useOrdersFeed } from './useOrdersFeed';
 import { Panel, PageHeader, PaymentBadge, StatusBadge } from './ui';
 import { RevenueChart } from './RevenueChart';
@@ -59,7 +60,9 @@ export default function DashboardPage() {
 
   if (error && !stats) return <ErrorState message={error} onRetry={load} />;
 
-  const inProgress = stats ? PIPELINE.reduce((n, p) => n + stats.byStatus[p.status], 0) : 0;
+  const deliveryEnabled = useCatalog((s) => s.data?.settings.deliveryEnabled ?? false);
+  const pipeline = PIPELINE.filter((p) => p.status !== 'out_for_delivery' || deliveryEnabled || (stats?.byStatus.out_for_delivery ?? 0) > 0);
+  const inProgress = stats ? pipeline.reduce((n, p) => n + stats.byStatus[p.status], 0) : 0;
   const topMax = Math.max(1, ...(stats?.topProducts.map((p) => p.quantity) ?? [1]));
   const recent = orders.slice(0, 6);
 
@@ -73,7 +76,7 @@ export default function DashboardPage() {
             <Kpi index={0} label="Pedidos hoje" value={stats.today.orders} format={int} hint={stats.today.cancelled ? `${stats.today.cancelled} cancelado(s)` : undefined} />
             <Kpi index={1} label="Faturamento hoje" value={stats.today.revenue} format={brl} />
             <Kpi index={2} label="Ticket médio" value={stats.today.averageTicket} format={brl} />
-            <Kpi index={3} label="Em andamento" value={inProgress} format={int} hint="Novos até em entrega" />
+            <Kpi index={3} label="Em andamento" value={inProgress} format={int} hint="Novos até prontos" />
           </>
         ) : (
           [0, 1, 2, 3].map((i) => <Skeleton key={i} className="h-[7.5rem] rounded-[var(--radius-lg)]" />)
@@ -81,8 +84,8 @@ export default function DashboardPage() {
       </div>
 
       <Panel title="Pedidos por etapa" className="mt-4" action={<Link to="/admin/pedidos" className="text-sm font-semibold text-tomato hover:underline">Abrir quadro</Link>}>
-        <ul className="grid grid-cols-2 gap-2 sm:grid-cols-5">
-          {PIPELINE.map(({ status, label, icon: Icon }) => (
+        <ul className={`grid grid-cols-2 gap-2 ${pipeline.length === 5 ? 'sm:grid-cols-5' : 'sm:grid-cols-4'}`}>
+          {pipeline.map(({ status, label, icon: Icon }) => (
             <li key={status}>
               <Link
                 to={`/admin/pedidos?status=${status}`}

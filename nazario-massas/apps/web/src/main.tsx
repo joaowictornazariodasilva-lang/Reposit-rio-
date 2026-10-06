@@ -2,7 +2,7 @@
 import '@/demo/install';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter, MemoryRouter } from 'react-router';
+import { BrowserRouter, HashRouter } from 'react-router';
 import { DEMO } from './lib/env';
 import { LazyMotion, MotionConfig } from 'motion/react';
 // Only the axes we use (weight + SOFT): ~60% lighter than the full variable font.
@@ -14,11 +14,16 @@ import App from './App';
 import { Toaster } from './components/ui/Toaster';
 import './stores/catalog';
 
-/** Demo runs inside a sandboxed frame: keep routing in memory; a bare `#admin` link opens the panel. */
+/**
+ * Demo is a static page: routes live in the hash (#/cardapio) so the browser's back button
+ * walks through them. A bare `#admin` (the owner's private link) is normalised to `#/admin`.
+ */
 function Router({ children }: { children: React.ReactNode }) {
   if (!DEMO) return <BrowserRouter>{children}</BrowserRouter>;
-  const start = location.hash.replace(/^#\/?/, '');
-  return <MemoryRouter initialEntries={[start ? `/${start}` : '/']}>{children}</MemoryRouter>;
+  if (location.hash && !location.hash.startsWith('#/')) {
+    history.replaceState(null, '', `#/${location.hash.slice(1)}`);
+  }
+  return <HashRouter>{children}</HashRouter>;
 }
 
 const loadMotionFeatures = () => import('./lib/motion-features').then((m) => m.default);

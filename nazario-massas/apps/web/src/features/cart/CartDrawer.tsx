@@ -129,7 +129,7 @@ export function CartDrawer() {
   };
 
   return (
-    <Dialog open={open} onClose={close} title="Seu carrinho" placement="right" className="bg-paper [&>h2]:sr-only">
+    <Dialog open={open} onClose={close} title="Seu carrinho" placement="right" className="[&>h2]:sr-only">
       <div className="flex items-center justify-between border-b border-line px-5 py-4">
         <div>
           <p className="font-display text-2xl leading-none text-ink" aria-hidden>Seu pedido</p>
@@ -149,9 +149,11 @@ export function CartDrawer() {
       ) : (
         <>
           <div className="flex-1 overflow-y-auto overscroll-contain px-5">
-            <div className="pt-4">
-              <FreeDeliveryMeter subtotal={summary.subtotal} threshold={summary.freeDeliveryFrom} />
-            </div>
+            {summary.deliveryEnabled && (
+              <div className="pt-4">
+                <FreeDeliveryMeter subtotal={summary.subtotal} threshold={summary.freeDeliveryFrom} />
+              </div>
+            )}
             <ul>
               <AnimatePresence initial={false}>
                 {summary.items.map((item, i) => (
@@ -170,16 +172,25 @@ export function CartDrawer() {
                 <dt>Subtotal</dt>
                 <dd className="tabular">{formatBRL(summary.subtotal)}</dd>
               </div>
-              <div className="flex justify-between text-ink-soft">
-                <dt>Entrega</dt>
-                <dd className="tabular">{summary.deliveryFee === 0 ? <span className="font-semibold text-basil">Grátis</span> : formatBRL(summary.deliveryFee)}</dd>
-              </div>
+              {summary.deliveryEnabled ? (
+                <div className="flex justify-between text-ink-soft">
+                  <dt>Entrega</dt>
+                  <dd className="tabular">{summary.deliveryFee === 0 ? <span className="font-semibold text-basil">Grátis</span> : formatBRL(summary.deliveryFee)}</dd>
+                </div>
+              ) : (
+                <div className="flex justify-between text-ink-soft">
+                  <dt>Retirada no balcão</dt>
+                  <dd className="font-semibold text-basil">Sem taxa</dd>
+                </div>
+              )}
               <div className="flex justify-between pt-2 text-base font-semibold text-ink">
-                <dt>Total estimado</dt>
+                <dt>{summary.deliveryEnabled ? 'Total estimado' : 'Total'}</dt>
                 <dd className="tabular"><AnimatedText value={formatBRL(summary.subtotal + summary.deliveryFee)} /></dd>
               </div>
             </dl>
-            <p className="mt-1 text-xs text-ink-muted">Cupons e retirada no balcão você escolhe no próximo passo.</p>
+            <p className="mt-1 text-xs text-ink-muted">
+              {summary.deliveryEnabled ? 'Cupons e retirada no balcão você escolhe no próximo passo.' : 'Cupom de desconto você aplica no próximo passo.'}
+            </p>
             {belowMinimum && (
               <p className="mt-3 text-[0.8125rem] font-medium text-tomato">Pedido mínimo de {formatBRL(summary.minOrder)}.</p>
             )}

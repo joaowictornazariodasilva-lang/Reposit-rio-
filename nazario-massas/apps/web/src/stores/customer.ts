@@ -24,7 +24,7 @@ export const useCustomer = create<CustomerState>()(
       name: '',
       phone: '',
       document: '',
-      fulfillment: 'delivery',
+      fulfillment: 'pickup',
       address: { cep: '', street: '', number: '', complement: '', neighborhood: '', city: '', reference: '' },
       paymentMethod: 'pix',
       recentOrders: [],

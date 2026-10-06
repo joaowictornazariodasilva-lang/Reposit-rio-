@@ -71,9 +71,6 @@ export function SiteFooter() {
       <div className="border-t border-oven-line">
         <div className="container-page flex flex-col gap-2 py-6 text-xs text-ash sm:flex-row sm:items-center sm:justify-between">
           <p>© {year} Nazário Massas. Todos os direitos reservados.</p>
-          <Link to="/admin" className="link-underline w-fit hover:text-flour">
-            Área do restaurante
-          </Link>
         </div>
       </div>
     </footer>

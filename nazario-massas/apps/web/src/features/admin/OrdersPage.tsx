@@ -12,9 +12,10 @@ import { cn } from '@/lib/cn';
 import { formatBRL, formatCep, formatPhone, formatTime, timeAgo } from '@/lib/format';
 import { toast } from '@/stores/ui';
 import { DEMO } from '@/lib/env';
+import { useCatalog } from '@/stores/catalog';
 import { adminApi } from './session';
 import { useOrdersFeed } from './useOrdersFeed';
-import { NEXT_ACTION, PageHeader, PaymentBadge, StatusBadge } from './ui';
+import { nextActionLabel, PageHeader, PaymentBadge, StatusBadge } from './ui';
 
 const ACTIVE: OrderStatus[] = ['new', 'confirmed', 'preparing', 'ready', 'out_for_delivery'];
 type View = 'active' | 'completed' | 'cancelled';
@@ -77,7 +78,7 @@ function OrderCard({ order, onAdvance, busy }: { order: Order; onAdvance: () => 
       </Link>
       {next && (
         <Button size="sm" variant={order.status === 'new' ? 'primary' : 'secondary'} className="mt-3 w-full" loading={busy} onClick={onAdvance}>
-          {NEXT_ACTION[order.status]} <ArrowRight className="size-4" aria-hidden />
+          {nextActionLabel(order)} <ArrowRight className="size-4" aria-hidden />
         </Button>
       )}
     </m.article>
@@ -213,10 +214,12 @@ function OrderDetail({ order, onClose }: { order: Order; onClose: () => void }) 
               <dt>Subtotal</dt>
               <dd className="tabular">{formatBRL(order.subtotal)}</dd>
             </div>
-            <div className="flex justify-between text-ink-soft">
-              <dt>Entrega</dt>
-              <dd className="tabular">{formatBRL(order.deliveryFee)}</dd>
-            </div>
+            {order.fulfillment.type === 'delivery' && (
+              <div className="flex justify-between text-ink-soft">
+                <dt>Entrega</dt>
+                <dd className="tabular">{formatBRL(order.deliveryFee)}</dd>
+              </div>
+            )}
             <div className="flex justify-between text-ink-soft">
               <dt>Desconto{order.couponCode && ` (${order.couponCode})`}</dt>
               <dd className="tabular">− {formatBRL(order.discount)}</dd>
@@ -247,7 +250,7 @@ function OrderDetail({ order, onClose }: { order: Order; onClose: () => void }) 
         <div className="space-y-2 border-t border-line px-5 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
           {next && (
             <Button size="lg" className="w-full" loading={busy === order.id + next} onClick={() => run(order, next)}>
-              {NEXT_ACTION[order.status]} <ArrowRight className="size-5" aria-hidden />
+              {nextActionLabel(order)} <ArrowRight className="size-5" aria-hidden />
             </Button>
           )}
           <details className="group">
@@ -312,7 +315,10 @@ export default function OrdersPage() {
     return orders.filter((o) => ACTIVE.includes(o.status));
   }, [orders, view]);
 
-  const columns = ACTIVE.map((status) => ({ status, orders: visible.filter((o) => o.status === status).sort((a, b) => a.createdAt.localeCompare(b.createdAt)) }));
+  const deliveryEnabled = useCatalog((s) => s.data?.settings.deliveryEnabled ?? false);
+  // Pickup-only: no "out for delivery" column unless an older delivery order still sits there.
+  const statuses = ACTIVE.filter((s) => s !== 'out_for_delivery' || deliveryEnabled || visible.some((o) => o.status === s));
+  const columns = statuses.map((status) => ({ status, orders: visible.filter((o) => o.status === status).sort((a, b) => a.createdAt.localeCompare(b.createdAt)) }));
   const mobileList = filterStatus ? visible.filter((o) => o.status === filterStatus) : visible;
 
   return (
@@ -346,7 +352,7 @@ export default function OrdersPage() {
       {loaded && view === 'active' && (
         <>
           {/* Desktop board */}
-          <div className="hidden gap-3 lg:grid lg:grid-cols-5">
+          <div className={cn('hidden gap-3 lg:grid', columns.length === 5 ? 'lg:grid-cols-5' : 'lg:grid-cols-4')}>
             {columns.map((col) => (
               <section key={col.status} aria-labelledby={`col-${col.status}`} className="flex min-h-[60vh] flex-col rounded-[var(--radius-lg)] bg-flour-deep/60 p-2.5">
                 <h2 id={`col-${col.status}`} className="flex items-center justify-between px-1.5 pt-1 pb-3 text-sm font-semibold text-ink">
@@ -369,7 +375,7 @@ export default function OrdersPage() {
           {/* Mobile list with status filter */}
           <div className="lg:hidden">
             <div className="-mx-4 mb-4 flex gap-2 overflow-x-auto px-4 scrollbar-none">
-              {[null, ...ACTIVE].map((s) => {
+              {[null, ...statuses].map((s) => {
                 const count = s ? visible.filter((o) => o.status === s).length : visible.length;
                 const active = filterStatus === s;
                 return (

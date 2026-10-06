@@ -458,6 +458,7 @@ export const seedSettings: StoreSettings = {
   address: 'Rua dos Fornos, 148 — Vila Madalena, São Paulo · SP',
   hours: 'Terça a domingo, 18h às 23h30',
   isOpen: true,
+  deliveryEnabled: false,
   deliveryFee: 790,
   freeDeliveryFrom: 15000,
   minOrder: 3000,

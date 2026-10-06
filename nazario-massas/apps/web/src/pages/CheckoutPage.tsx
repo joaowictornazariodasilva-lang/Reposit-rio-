@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { AnimatePresence, m } from 'motion/react';
-import { Banknote, Bike, ChevronDown, ChevronLeft, CreditCard, Lock, QrCode, ShoppingBag, Store, Tag } from 'lucide-react';
+import { Banknote, Bike, ChevronDown, ChevronLeft, Clock, CreditCard, Lock, MapPin, QrCode, ShoppingBag, Store, Tag } from 'lucide-react';
 import { type CheckoutInput, type PaymentMethod, type PublicOrder } from '@nazario/shared';
 import { checkoutSchema } from '@nazario/shared/schemas';
 import { Button, ButtonLink } from '@/components/ui/Button';
@@ -72,11 +72,13 @@ export default function CheckoutPage() {
   const setCoupon = useCart((s) => s.setCoupon);
   const clearCart = useCart((s) => s.clear);
   const catalog = useCatalog((s) => s.data);
+  // Pickup-only stores never show (or send) delivery.
+  const deliveryEnabled = catalog?.settings.deliveryEnabled ?? false;
   const saved = useCustomer();
   const formRef = useRef<HTMLFormElement>(null);
   const wide = useMediaQuery('(min-width: 1024px)');
 
-  const [fulfillment, setFulfillment] = useState<'delivery' | 'pickup'>(saved.fulfillment);
+  const [fulfillmentChoice, setFulfillment] = useState<'delivery' | 'pickup'>(saved.fulfillment);
   const [name, setName] = useState(saved.name);
   const [phone, setPhone] = useState(formatPhone(saved.phone));
   const [documentNumber, setDocumentNumber] = useState(saved.document ? formatCpf(saved.document) : '');
@@ -90,6 +92,7 @@ export default function CheckoutPage() {
   const [cepState, setCepState] = useState<'idle' | 'loading' | 'notfound'>('idle');
   const [summaryOpen, setSummaryOpen] = useState(false);
 
+  const fulfillment = deliveryEnabled ? fulfillmentChoice : 'pickup';
   const items = useMemo(
     () => lines.map(({ productId, variantId, quantity, addonOptionIds, notes }) => ({ productId, variantId, quantity, addonOptionIds, notes })),
     [lines],
@@ -362,6 +365,29 @@ export default function CheckoutPage() {
             </div>
           )}
 
+          {!deliveryEnabled ? (
+            <Section step={1} title="Retirada no local">
+              <div className="flex gap-4 rounded-[var(--radius-md)] border border-line bg-flour/60 p-4">
+                <span className="grid size-11 shrink-0 place-items-center rounded-full bg-ink text-flour">
+                  <Store className="size-5" aria-hidden />
+                </span>
+                <div className="min-w-0 text-sm">
+                  <p className="font-semibold text-ink">Você retira no nosso balcão</p>
+                  {catalog && (
+                    <>
+                      <p className="mt-1 flex items-start gap-1.5 text-ink-soft">
+                        <MapPin className="mt-0.5 size-3.5 shrink-0" aria-hidden /> {catalog.settings.address}
+                      </p>
+                      <p className="mt-1 flex items-start gap-1.5 text-ink-soft">
+                        <Clock className="mt-0.5 size-3.5 shrink-0" aria-hidden /> Pronto em {catalog.settings.pickupEstimate} · {catalog.settings.hours}
+                      </p>
+                    </>
+                  )}
+                  <p className="mt-2 text-xs text-ink-muted">Avisamos por aqui quando o pedido estiver pronto. Sem taxa.</p>
+                </div>
+              </div>
+            </Section>
+          ) : (
           <Section step={1} title="Como você quer receber?">
             <RadioCards
               name="fulfillment"
@@ -386,6 +412,7 @@ export default function CheckoutPage() {
               ]}
             />
           </Section>
+          )}
 
           <Section step={2} title="Seus dados">
             <div className="grid gap-4 sm:grid-cols-2">

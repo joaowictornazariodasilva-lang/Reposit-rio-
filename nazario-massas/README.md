@@ -1,7 +1,7 @@
 # Nazário Massas — e-commerce de pizzas, massas e bebidas
 
 Loja virtual completa: vitrine, cardápio, personalização de produto, carrinho,
-checkout (entrega/retirada, Pix, cartão, dinheiro), acompanhamento do pedido em
+checkout (**retirada no local**; Pix, cartão, dinheiro), acompanhamento do pedido em
 tempo real e painel administrativo com dashboard, gestão de pedidos, cardápio,
 adicionais, categorias, cupons e configurações da loja.
 
@@ -20,6 +20,25 @@ npm run dev           # API em :8787 + site em :5173
 - Pagamento em modo **teste**: o Pix gerado é fictício; use “Simular pagamento”
   na tela do pedido para ver o fluxo completo.
 - Cupons de exemplo: `BEMVINDO10` (10 % acima de R$ 60), `NAZARIO20` (R$ 20 acima de R$ 120).
+
+## Retirada no local (padrão) e entregas
+
+A loja trabalha **somente com retirada no balcão**: o checkout não pede
+endereço, o site não fala em entrega e a API recusa pedidos de entrega. Para
+passar a entregar no futuro, ligue **Painel → Loja → Fazer entregas**; taxas,
+entrega grátis e tempo de entrega aparecem nessa mesma tela.
+
+## Acesso ao painel
+
+O painel fica em `/admin` e **não tem link na loja** — clientes não o veem.
+Mesmo quem digitar o endereço só entra com e-mail e senha, verificados no
+servidor (cookie httpOnly assinado, 5 tentativas a cada 15 min).
+
+## Demonstração sem servidor
+
+`npm run build:demo` gera `apps/web/dist-demo/`: o mesmo site com a API
+simulada no navegador (mesmo código de pedidos, preços e validação), dados no
+`localStorage` e pedidos de exemplo. O painel abre pelo link privado `…#admin`.
 
 ## Testes
 

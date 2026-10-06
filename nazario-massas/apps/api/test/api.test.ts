@@ -24,12 +24,12 @@ const json = (body: unknown, extra: Record<string, string> = {}) => ({
   body: JSON.stringify(body),
 });
 
+const deliveryAddress = { cep: '05433-000', street: 'Rua Harmonia', number: '120', neighborhood: 'Vila Madalena', city: 'São Paulo' };
+
 const checkout = {
   customer: { name: 'Maria Souza', phone: '(11) 98765-4321' },
-  fulfillment: {
-    type: 'delivery',
-    address: { cep: '05433-000', street: 'Rua Harmonia', number: '120', neighborhood: 'Vila Madalena', city: 'São Paulo' },
-  },
+  fulfillment: { type: 'pickup' },
+
   items: [
     { productId: 'prd_margherita', variantId: 'g', quantity: 1, addonOptionIds: ['borda-catupiry'], notes: 'Sem cebola' },
     { productId: 'prd_coca-cola-lata', variantId: 'un', quantity: 2 },
@@ -59,8 +59,8 @@ describe('public API', () => {
     expect(ok.status).toBe(201);
     const order = (await ok.json()) as PublicOrder;
     expect(order.subtotal).toBe(8200 + 1200 + 1400);
-    expect(order.deliveryFee).toBe(790);
-    expect(order.total).toBe(11590);
+    expect(order.deliveryFee).toBe(0);
+    expect(order.total).toBe(10800);
     expect(order.payment.pix?.copyPaste).toMatch(/^000201/);
     expect(order).not.toHaveProperty('id');
     expect(order.customer).not.toHaveProperty('document');
@@ -79,6 +79,33 @@ describe('public API', () => {
     expect(bad.status).toBe(400);
     const tampered = await app.request('/api/orders', json({ ...checkout, items: [{ productId: 'prd_margherita', variantId: 'xl', quantity: 1 }] }));
     expect(tampered.status).toBe(422);
+  });
+});
+
+describe('pickup-only store', () => {
+  it('rejects delivery orders until the admin enables delivery', async () => {
+    const delivery = { ...checkout, fulfillment: { type: 'delivery', address: deliveryAddress } };
+    const rejected = await app.request('/api/orders', json(delivery));
+    expect(rejected.status).toBe(422);
+    expect(((await rejected.json()) as { error: string }).error).toMatch(/apenas com retirada/);
+
+    const cookie = await login();
+    const settings = await (await app.request('/api/admin/settings', { headers: { cookie } })).json();
+    const saved = await app.request('/api/admin/settings', {
+      method: 'PUT',
+      headers: { cookie, 'content-type': 'application/json' },
+      body: JSON.stringify({ ...(settings as object), deliveryEnabled: true }),
+    });
+    expect(saved.status).toBe(200);
+    const accepted = await app.request('/api/orders', json(delivery));
+    expect(accepted.status).toBe(201);
+    expect(((await accepted.json()) as PublicOrder).deliveryFee).toBe(790);
+
+    await app.request('/api/admin/settings', {
+      method: 'PUT',
+      headers: { cookie, 'content-type': 'application/json' },
+      body: JSON.stringify({ ...(settings as object), deliveryEnabled: false }),
+    });
   });
 });
 
@@ -103,16 +130,17 @@ describe('admin API', () => {
   it('moves an order through the kitchen workflow', async () => {
     const cookie = await login();
     const orders = (await (await app.request('/api/admin/orders', { headers: { cookie } })).json()) as Order[];
-    const order = orders.find((o) => o.status === 'new')!;
+    const order = orders.find((o) => o.status === 'new' && o.fulfillment.type === 'pickup')!;
     const patch = (status: string) =>
       app.request(`/api/admin/orders/${order.id}/status`, { method: 'PATCH', headers: { cookie, 'content-type': 'application/json' }, body: JSON.stringify({ status }) });
     expect((await patch('preparing')).status).toBe(200);
     expect((await patch('confirmed')).status).toBe(409); // no going back
-    expect((await patch('out_for_delivery')).status).toBe(200);
+    expect((await patch('out_for_delivery')).status).toBe(409); // pickup orders skip delivery
+    expect((await patch('ready')).status).toBe(200);
     expect((await patch('completed')).status).toBe(200);
     expect((await patch('cancelled')).status).toBe(409);
     const done = (await (await app.request(`/api/admin/orders/${order.id}`, { headers: { cookie } })).json()) as Order;
-    expect(done.statusHistory.map((h) => h.status)).toEqual(['new', 'preparing', 'out_for_delivery', 'completed']);
+    expect(done.statusHistory.map((h) => h.status)).toEqual(['new', 'preparing', 'ready', 'completed']);
     const stats = (await (await app.request(`/api/admin/stats`, { headers: { cookie } })).json()) as { today: { orders: number } };
     expect(stats.today.orders).toBeGreaterThan(0);
   });

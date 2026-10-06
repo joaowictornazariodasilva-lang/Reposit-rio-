@@ -92,6 +92,8 @@ export const storeSettingsSchema = z.object({
   address: z.string(),
   hours: z.string(),
   isOpen: z.boolean(),
+  /** Home delivery offered? Off = pickup only (checkout hides delivery, API rejects it). */
+  deliveryEnabled: z.boolean().default(false),
   deliveryFee: cents,
   freeDeliveryFrom: cents,
   minOrder: cents,

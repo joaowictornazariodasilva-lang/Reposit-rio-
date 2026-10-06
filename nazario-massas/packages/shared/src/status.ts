@@ -14,7 +14,7 @@ export const ORDER_STATUS_LABEL: Record<OrderStatus, string> = {
 export const PAYMENT_STATUS_LABEL: Record<PaymentStatus, string> = {
   awaiting_payment: 'Aguardando pagamento',
   paid: 'Pago',
-  pay_on_delivery: 'Pagar na entrega',
+  pay_on_delivery: 'Pagamento presencial',
   failed: 'Falhou',
   refunded: 'Estornado',
 };
@@ -86,7 +86,9 @@ export function trackingSteps(order: Pick<Order, 'status' | 'fulfillment' | 'pay
       label: order.payment.status === 'pay_on_delivery' ? 'Pedido confirmado' : 'Pagamento confirmado',
       description:
         order.payment.status === 'pay_on_delivery'
-          ? 'Pagamento será feito na entrega.'
+          ? pickup
+            ? 'Pagamento será feito na retirada.'
+            : 'Pagamento será feito na entrega.'
           : order.payment.status === 'paid'
             ? 'Pagamento aprovado.'
             : 'Aguardando a confirmação do pagamento.',

@@ -125,12 +125,27 @@ export default function SettingsPage() {
         </div>
       </Panel>
 
-      <Panel title="Entrega e pedido">
+      <Panel title="Retirada e entrega">
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-4 rounded-[var(--radius-md)] border border-line p-4">
+          <div>
+            <p className="font-semibold text-ink">{settings.deliveryEnabled ? 'Entrega e retirada' : 'Somente retirada no local'}</p>
+            <p className="text-sm text-ink-muted">
+              {settings.deliveryEnabled
+                ? 'O cliente escolhe entre receber em casa ou retirar no balcão.'
+                : 'O checkout não pede endereço e o site não fala em entrega.'}
+            </p>
+          </div>
+          <Switch checked={settings.deliveryEnabled} onChange={(v) => up('deliveryEnabled', v)} label="Fazer entregas" />
+        </div>
         <div className="grid gap-4 sm:grid-cols-3">
           {(
             [
-              ['deliveryFee', 'Taxa de entrega (R$)'],
-              ['freeDeliveryFrom', 'Entrega grátis a partir de (R$)'],
+              ...(settings.deliveryEnabled
+                ? ([
+                    ['deliveryFee', 'Taxa de entrega (R$)'],
+                    ['freeDeliveryFrom', 'Entrega grátis a partir de (R$)'],
+                  ] as const)
+                : []),
               ['minOrder', 'Pedido mínimo (R$)'],
             ] as const
           ).map(([key, label]) => (
@@ -138,8 +153,10 @@ export default function SettingsPage() {
               {(p) => <Input {...p} inputMode="decimal" className="tabular" value={money[key]} onChange={(e) => setMoney((m) => ({ ...m, [key]: e.target.value }))} />}
             </Field>
           ))}
-          <Field label="Tempo de entrega">{(p) => <Input {...p} value={settings.deliveryEstimate} onChange={(e) => up('deliveryEstimate', e.target.value)} />}</Field>
-          <Field label="Tempo de retirada">{(p) => <Input {...p} value={settings.pickupEstimate} onChange={(e) => up('pickupEstimate', e.target.value)} />}</Field>
+          {settings.deliveryEnabled && (
+            <Field label="Tempo de entrega">{(p) => <Input {...p} value={settings.deliveryEstimate} onChange={(e) => up('deliveryEstimate', e.target.value)} />}</Field>
+          )}
+          <Field label="Tempo de preparo para retirada">{(p) => <Input {...p} value={settings.pickupEstimate} onChange={(e) => up('pickupEstimate', e.target.value)} />}</Field>
         </div>
       </Panel>
 

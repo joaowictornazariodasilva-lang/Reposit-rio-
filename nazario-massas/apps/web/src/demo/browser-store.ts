@@ -12,7 +12,7 @@ interface Database {
   lastOrderNumber: number;
 }
 
-const KEY = 'nazario-demo-db-v1';
+const KEY = 'nazario-demo-db-v2';
 const clone = <T>(v: T): T => structuredClone(v);
 
 function fresh(): Database {

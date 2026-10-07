@@ -1,4 +1,4 @@
-import { Suspense, useEffect } from 'react';
+import { Suspense, useEffect, useRef } from 'react';
 import { Outlet, useLocation } from 'react-router';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { SiteFooter } from '@/components/layout/SiteFooter';
@@ -9,10 +9,15 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 function ScrollToTop() {
   const { pathname, state } = useLocation();
+  const previous = useRef(pathname);
   useEffect(() => {
+    const from = previous.current;
+    previous.current = pathname;
     // Product sheets open over the current page — keep its scroll position.
     if ((state as { backgroundLocation?: unknown } | null)?.backgroundLocation) return;
-    if (pathname.startsWith('/cardapio')) return; // the menu manages its own section scrolling
+    // Switching categories inside the menu: the menu scrolls to the section itself.
+    if (from !== pathname && from.startsWith('/cardapio') && pathname.startsWith('/cardapio')) return;
+    // Every other arrival starts at the top (e.g. "Montar meu pedido" from the bottom of the home page).
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, [pathname, state]);
   return null;

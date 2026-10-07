@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router';
+import { useBackToClose } from '@/hooks/useBackToClose';
 import { m, useAnimationControls } from 'motion/react';
 import { Menu, ShoppingBag } from 'lucide-react';
 import { Logo } from '@/components/brand/Logo';
@@ -73,6 +74,14 @@ export function SiteHeader() {
   const overHero = pathname === '/' && !scrolled;
 
   useEffect(() => setMenuOpen(false), [pathname]);
+  // The phone's back gesture closes the menu instead of leaving the site.
+  useBackToClose(menuOpen, () => setMenuOpen(false));
+
+  const goFromMenu = (to: string) => {
+    setMenuOpen(false);
+    // Tapping the page you're already on (e.g. "Início" on the home page) takes you back to its top.
+    if (to === pathname) window.setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
+  };
 
   return (
     <header
@@ -150,14 +159,20 @@ export function SiteHeader() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.08 + i * 0.05, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             >
-              <Link to={item.to} className="flex items-baseline justify-between border-b border-oven-line py-5">
+              <Link
+                to={item.to}
+                // The menu's own history entry is replaced, so "back" from the new page returns to where you were.
+                replace
+                onClick={() => goFromMenu(item.to)}
+                className="flex items-baseline justify-between border-b border-oven-line py-5"
+              >
                 <span className="font-display text-[2rem] leading-none">{item.label}</span>
                 <span className="eyebrow text-ash">0{i + 1}</span>
               </Link>
             </m.div>
           ))}
           {lastOrder && (
-            <Link to={`/pedido/${lastOrder.token}`} className="mt-8 text-sm font-semibold text-olive">
+            <Link to={`/pedido/${lastOrder.token}`} replace onClick={() => goFromMenu(`/pedido/${lastOrder.token}`)} className="mt-8 text-sm font-semibold text-olive">
               Acompanhar pedido #{lastOrder.number} →
             </Link>
           )}

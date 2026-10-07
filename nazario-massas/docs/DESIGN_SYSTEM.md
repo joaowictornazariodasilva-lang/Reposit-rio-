@@ -96,21 +96,6 @@ Biblioteca: **Motion** (`motion/react`) via `LazyMotion` + componentes `m`
 - Scroll: reveal único (`once`), parallax moderado (±8–14 %).
 - Produto: imagem acompanha o cursor (apenas mouse), botão “+” vira ✓.
 - Carrinho: pulso no ícone, contador rolando, toast com atalho.
-- Cenas de scroll na home (`features/home/Scenes.tsx`):
-  - **Manifesto**: palavras acendem conforme a leitura.
-  - **Anatomia da margherita** (seção fixada, 320 svh): a pizza recortada se
-    divide em 8 fatias, os ingredientes aparecem com linhas-guia e ela se
-    remonta no fim. Fatias = mesma imagem com `clip-path` estático; só
-    `transform` anima.
-  - **O forno em números**: 400 °C · 90 s · 48 h contando, texto vazado
-    gigante deslizando com o scroll, foto com parallax.
-  - Fotos editoriais entram com cortina (`scaleY`) + zoom suave.
-- Produto: a pizza cresce com o tamanho (P/M/G) e mostra o diâmetro em cm.
-- Adicionar: a foto “voa” até a sacola do cabeçalho (Web Animations API).
-- Troca de página: fade-up de 0,5 s (pulado na primeira carga, não atrasa o LCP).
-- Opacidade em faixas de scroll com várias paradas usa `useRamp` (cálculo na
-  thread principal): o ScrollTimeline nativo do Motion mapeia errado essas
-  faixas dentro de seções fixadas.
 - `prefers-reduced-motion`: conteúdo aparece pronto, sem fade nem slide.
 
 ## Regra de ouro

@@ -42,7 +42,6 @@ function CartButton({ light }: { light: boolean }) {
     <button
       type="button"
       onClick={openCart}
-      data-cart-target
       aria-label={`Abrir carrinho, ${count} ${count === 1 ? 'item' : 'itens'}`}
       className={cn(
         'relative inline-flex h-11 items-center gap-2 rounded-full pr-4 pl-3.5 text-sm font-semibold transition-colors duration-300',

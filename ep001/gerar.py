@@ -52,17 +52,32 @@ def http(method, url, body=None, raw=False):
     return data if raw else json.loads(data)
 
 
+def find_image(name):
+    for ext in ("png", "jpg", "jpeg", "webp"):
+        p = ROOT / "personagens" / f"{name}.{ext}"
+        if p.exists():
+            return p
+    return None
+
+
+def encode(p):
+    mime = "image/jpeg" if p.suffix.lower() in (".jpg", ".jpeg") else f"image/{p.suffix[1:].lower()}"
+    return {"image": {"inlineData": {"mimeType": mime, "data": base64.b64encode(p.read_bytes()).decode()}}, "referenceType": "asset"}
+
+
 def ref_images(chars):
-    refs = []
-    for name in chars:
-        for ext in ("png", "jpg", "jpeg", "webp"):
-            p = ROOT / "personagens" / f"{name}.{ext}"
-            if p.exists():
-                mime = "image/jpeg" if ext in ("jpg", "jpeg") else f"image/{ext}"
-                refs.append((name, {"image": {"inlineData": {"mimeType": mime, "data": base64.b64encode(p.read_bytes()).decode()}},
-                                    "referenceType": "asset"}))
-                break
-    return refs[:3]  # limite da API: 3 imagens por clipe
+    """Até 3 referências (limite da API). Com 4 personagens, os excedentes viram uma
+    única folha lado a lado, para que todos tenham referência visual."""
+    found = [(n, p) for n in chars if (p := find_image(n))]
+    if len(found) > 3:
+        sheet = HERE / f"_ref_{'_'.join(n for n, _ in found[2:])}.jpg"
+        if not sheet.exists():
+            ins = sum([["-i", str(p)] for _, p in found[2:]], [])
+            k = len(found) - 2
+            chain = ";".join(f"[{i}:v]scale=-2:1024[s{i}]" for i in range(k)) + ";" + "".join(f"[s{i}]" for i in range(k)) + f"hstack=inputs={k}"
+            subprocess.run(["ffmpeg", "-v", "error", "-y", *ins, "-filter_complex", chain, "-q:v", "3", str(sheet)], check=True)
+        found = found[:2] + [("+".join(n for n, _ in found[2:]), sheet)]
+    return [(n, encode(p)) for n, p in found]
 
 
 def request_body(clip):
@@ -73,6 +88,7 @@ def request_body(clip):
     refs = ref_images(clip["characters"])
     if refs:
         inst["referenceImages"] = [r for _, r in refs]
+        inst["prompt"] += "\nKeep the characters exactly as in the reference images (same faces, colors, proportions and clothes)."
     params = {"aspectRatio": "9:16", "durationSeconds": "8", "resolution": RESOLUTION, "numberOfVideos": 1}
     if send_negative:
         params["negativePrompt"] = CFG["negative_prompt"]

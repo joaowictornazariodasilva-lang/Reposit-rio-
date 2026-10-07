@@ -1,0 +1,19 @@
+{
+  "name": "pituco",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Pituco — série infantil em animação 2D 'desenhada na hora'. Episódio 01: Cadê a estrelinha?",
+  "type": "module",
+  "scripts": {
+    "voice": "python3 scripts/tts.py",
+    "audio": "python3 scripts/audio.py",
+    "stills": "node scripts/render.mjs --stills",
+    "render": "node scripts/render.mjs",
+    "build": "npm run audio && npm run render",
+    "test": "node scripts/check.mjs",
+    "dev": "npx http-server . -p 8080 -c-1 -o /src/"
+  },
+  "devDependencies": {
+    "playwright": "1.56.1"
+  }
+}

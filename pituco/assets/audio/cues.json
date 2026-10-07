@@ -1,0 +1,98 @@
+[
+  {
+    "id": "n01",
+    "text": "Olha! Uma estrelinha!",
+    "start": 0.15,
+    "end": 1.644,
+    "dur": 1.494,
+    "words": 3
+  },
+  {
+    "id": "n02",
+    "text": "O Pituco quer pegar!",
+    "start": 2.05,
+    "end": 3.292,
+    "dur": 1.242,
+    "words": 4
+  },
+  {
+    "id": "n03",
+    "text": "Pula!",
+    "start": 3.32,
+    "end": 3.672,
+    "dur": 0.352,
+    "words": 1
+  },
+  {
+    "id": "n04",
+    "text": "Pula!",
+    "start": 3.88,
+    "end": 4.232,
+    "dur": 0.352,
+    "words": 1
+  },
+  {
+    "id": "n05",
+    "text": "Não alcança!",
+    "start": 4.5,
+    "end": 5.294,
+    "dur": 0.794,
+    "words": 2
+  },
+  {
+    "id": "n06",
+    "text": "Vamos ajudar? Conta comigo!",
+    "start": 5.4,
+    "end": 7.372,
+    "dur": 1.972,
+    "words": 4
+  },
+  {
+    "id": "n07",
+    "text": "Um!",
+    "start": 7.5,
+    "end": 7.854,
+    "dur": 0.354,
+    "words": 1
+  },
+  {
+    "id": "n08",
+    "text": "Dois!",
+    "start": 8.438,
+    "end": 8.918,
+    "dur": 0.481,
+    "words": 1
+  },
+  {
+    "id": "n09",
+    "text": "Três!",
+    "start": 9.375,
+    "end": 9.801,
+    "dur": 0.426,
+    "words": 1
+  },
+  {
+    "id": "n10",
+    "text": "Uau!",
+    "start": 9.95,
+    "end": 10.332,
+    "dur": 0.382,
+    "words": 1
+  },
+  {
+    "id": "n11",
+    "text": "Conseguiu! Que brilho!",
+    "start": 11.8,
+    "end": 13.349,
+    "dur": 1.549,
+    "words": 3
+  },
+  {
+    "id": "n12",
+    "text": "De novo?",
+    "start": 13.55,
+    "end": 14.155,
+    "dur": 0.605,
+    "words": 2
+  }
+]

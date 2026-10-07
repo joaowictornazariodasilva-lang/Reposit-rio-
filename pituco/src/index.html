@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pituco — Cadê a estrelinha?</title>
+<style>
+  :root { --bg: #1d1b2b; --panel: #2a2740; --text: #f4efe6; --muted: #b9b3cc; --accent: #ff8a4c; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text); font: 15px/1.4 system-ui, sans-serif; }
+  .wrap { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 12px 16px; }
+  .stage { position: relative; height: min(calc(100vh - 110px), calc((100vw - 32px) * 16 / 9)); aspect-ratio: 9 / 16; border-radius: 18px; overflow: hidden; box-shadow: 0 10px 40px #0008; cursor: pointer; }
+  .stage svg { width: 100%; height: 100%; display: block; }
+  .safe { position: absolute; inset: 0; pointer-events: none; display: none; }
+  .safe.on { display: block; }
+  .safe div { position: absolute; background: #ff004433; border: 2px dashed #ff0044aa; }
+  .bigplay { position: absolute; inset: 0; display: grid; place-items: center; background: #0003; }
+  .bigplay span { width: 96px; height: 96px; border-radius: 50%; background: var(--accent); display: grid; place-items: center; font-size: 40px; color: #fff; box-shadow: 0 6px 20px #0006; }
+  .controls { display: flex; gap: 8px; align-items: center; width: min(560px, 100%); }
+  button { background: var(--panel); color: var(--text); border: 0; border-radius: 10px; padding: 8px 12px; font: inherit; cursor: pointer; min-height: 40px; }
+  button:focus-visible, input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  input[type=range] { flex: 1; accent-color: var(--accent); }
+  .time { font-variant-numeric: tabular-nums; color: var(--muted); min-width: 52px; text-align: right; }
+  body.render { background: #fff; }
+  body.render .wrap { padding: 0; display: block; }
+  body.render .stage { height: 1920px; width: 1080px; border-radius: 0; box-shadow: none; }
+  body.render .controls, body.render .bigplay { display: none; }
+  @media (prefers-reduced-motion: reduce) { .bigplay span { transition: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="stage" id="stage" role="button" aria-label="Tocar ou pausar o episódio">
+    <svg id="svg" viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="safe" id="safe" aria-hidden="true">
+      <!-- Aproximação das áreas cobertas pela interface do YouTube Shorts -->
+      <div style="left:0;right:0;bottom:0;height:20%"></div>
+      <div style="right:0;width:13%;top:45%;bottom:20%"></div>
+    </div>
+    <div class="bigplay" id="bigplay"><span>▶</span></div>
+  </div>
+  <div class="controls">
+    <button id="play">Tocar</button>
+    <input id="scrub" type="range" min="0" max="15" step="0.001" value="0" aria-label="Posição no tempo">
+    <span class="time" id="time">0.00s</span>
+    <button id="safeBtn" aria-pressed="false">Zonas Shorts</button>
+  </div>
+</div>
+<script src="timeline.js"></script>
+<script src="draw.js"></script>
+<script src="scene.js"></script>
+<script>
+(function () {
+  const TL = window.TIMELINE;
+  const params = new URLSearchParams(location.search);
+  const renderMode = params.has('render');
+  if (renderMode) document.body.classList.add('render');
+  Scene.build(document.getElementById('svg'));
+
+  // Modo exportação: o renderizador chama seek(t) e captura o quadro.
+  window.seek = (t) => { Scene.render(t); return true; };
+  window.sceneReady = true;
+  Scene.render(Number(params.get('t') || 0));
+  if (renderMode) return;
+
+  const audio = new Audio('../assets/audio/mix.wav');
+  audio.loop = true;
+  let playing = false, clock0 = 0, offset = 0, audioOk = true;
+  audio.addEventListener('error', () => { audioOk = false; });
+
+  const $ = (id) => document.getElementById(id);
+  const now = () => (audioOk && !audio.paused ? audio.currentTime : offset + (playing ? (performance.now() - clock0) / 1000 : 0)) % TL.duration;
+
+  function frame() {
+    const t = now();
+    Scene.render(t);
+    $('scrub').value = t; $('time').textContent = t.toFixed(2) + 's';
+    if (playing) requestAnimationFrame(frame);
+  }
+  function play() {
+    playing = true; clock0 = performance.now();
+    $('bigplay').style.display = 'none'; $('play').textContent = 'Pausar';
+    if (audioOk) { audio.currentTime = offset; audio.play().catch(() => { audioOk = false; }); }
+    requestAnimationFrame(frame);
+  }
+  function pause() {
+    offset = now(); playing = false; audio.pause();
+    $('play').textContent = 'Tocar';
+  }
+  const toggle = () => (playing ? pause() : play());
+  $('play').onclick = toggle;
+  $('stage').onclick = toggle;
+  $('stage').onkeydown = (e) => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggle(); } };
+  $('stage').tabIndex = 0;
+  $('scrub').oninput = (e) => {
+    offset = Number(e.target.value);
+    if (audioOk) audio.currentTime = offset;
+    clock0 = performance.now();
+    if (!playing) { Scene.render(offset); $('time').textContent = offset.toFixed(2) + 's'; }
+  };
+  $('safeBtn').onclick = () => {
+    const on = $('safe').classList.toggle('on');
+    $('safeBtn').setAttribute('aria-pressed', on);
+  };
+})();
+</script>
+</body>
+</html>

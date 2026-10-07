@@ -8,6 +8,7 @@ import { ErrorState, Skeleton } from '@/components/ui/Feedback';
 import { Picture } from '@/components/ui/Picture';
 import { Reveal, revealItem } from '@/components/ui/Reveal';
 import { Hero, Ticker } from '@/features/home/Hero';
+import { CurtainReveal, ExplodedPizza, Manifesto, OvenNumbers } from '@/features/home/Scenes';
 import { ProductCard, useProductHref } from '@/features/catalog/ProductCard';
 import { formatBRL, pluralize } from '@/lib/format';
 import { useSeo } from '@/lib/seo';
@@ -140,17 +141,19 @@ function Method() {
   return (
     <section className="container-page grid items-center gap-12 py-20 sm:py-28 lg:grid-cols-2 lg:gap-20" aria-labelledby="metodo-title">
       <div ref={ref} className="relative aspect-[4/5] overflow-hidden rounded-[var(--radius-xl)] lg:aspect-[4/5.2]">
-        <m.div className="absolute inset-[-10%_0]" style={{ y }}>
-          <Picture
-            src="/images/editorial-queijo"
-            kind="editorial"
-            width={2}
-            height={3}
-            alt="Fatia de pizza sendo levantada com o queijo esticando"
-            sizes="(min-width: 1024px) 45vw, 100vw"
-            className="size-full"
-          />
-        </m.div>
+        <CurtainReveal className="absolute inset-0">
+          <m.div className="absolute inset-[-10%_0]" style={{ y }}>
+            <Picture
+              src="/images/editorial-queijo"
+              kind="editorial"
+              width={2}
+              height={3}
+              alt="Fatia de pizza sendo levantada com o queijo esticando"
+              sizes="(min-width: 1024px) 45vw, 100vw"
+              className="size-full"
+            />
+          </m.div>
+        </CurtainReveal>
         <div className="absolute top-5 left-5 rounded-full bg-oven/80 px-4 py-2 text-xs font-semibold tracking-wide text-flour backdrop-blur">
           Fior di latte rasgado à mão
         </div>
@@ -221,7 +224,7 @@ function PastaBand() {
           </ButtonLink>
         </div>
         <Reveal className="order-1 lg:order-2">
-          <div className="relative mx-auto aspect-[4/5] max-w-md overflow-hidden rounded-t-[999px] rounded-b-[var(--radius-xl)]">
+          <CurtainReveal curtain="bg-oven" className="mx-auto aspect-[4/5] max-w-md rounded-t-[999px] rounded-b-[var(--radius-xl)]">
             <Picture
               src="/images/editorial-garfo"
               kind="editorial"
@@ -231,7 +234,7 @@ function PastaBand() {
               sizes="(min-width: 1024px) 28rem, 90vw"
               className="size-full bg-oven"
             />
-          </div>
+          </CurtainReveal>
         </Reveal>
       </div>
     </section>
@@ -289,8 +292,11 @@ export default function HomePage() {
     <>
       <Hero />
       <Ticker />
+      <Manifesto />
       <Categories />
+      <ExplodedPizza />
       <Favorites />
+      <OvenNumbers />
       <Method />
       <PastaBand />
       <OrderCta />

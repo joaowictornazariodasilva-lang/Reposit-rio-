@@ -85,4 +85,27 @@ await Promise.all(
   }),
 );
 
+// Transparent cut-out of a top-down pizza for the scroll "exploded pizza" scene.
+const CUTOUT = { name: 'pizza-topo', id: '1595854341625-f33ee10dbf94', cx: 612, cy: 546, rx: 426, ry: 438, sourceWidth: 1600 };
+if (force || !(await exists(join(outDir, `${CUTOUT.name}-1000.webp`)))) {
+  const res = await fetch(`https://images.unsplash.com/photo-${CUTOUT.id}?w=${CUTOUT.sourceWidth}&q=90&fm=jpg`);
+  if (!res.ok) throw new Error(`${CUTOUT.name}: HTTP ${res.status}`);
+  const side = Math.max(CUTOUT.rx, CUTOUT.ry) * 2 + 8;
+  const left = Math.round(CUTOUT.cx - side / 2);
+  const top = Math.round(CUTOUT.cy - side / 2);
+  const mask = Buffer.from(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${side}" height="${side}"><defs><filter id="f"><feGaussianBlur stdDeviation="2"/></filter></defs>` +
+      `<ellipse cx="${side / 2}" cy="${side / 2}" rx="${CUTOUT.rx}" ry="${CUTOUT.ry}" fill="#fff" filter="url(#f)"/></svg>`,
+  );
+  const square = await sharp(Buffer.from(await res.arrayBuffer()))
+    .extract({ left, top, width: side, height: side })
+    .composite([{ input: mask, blend: 'dest-in' }])
+    .png()
+    .toBuffer();
+  for (const width of [600, 1000]) {
+    await writeFile(join(outDir, `${CUTOUT.name}-${width}.webp`), await sharp(square).resize(width, width).webp({ quality: 80, alphaQuality: 90 }).toBuffer());
+  }
+  console.log(`✓ ${CUTOUT.name} (cut-out)`);
+}
+
 console.log(`Images ready (${done} processed) → ${outDir}`);

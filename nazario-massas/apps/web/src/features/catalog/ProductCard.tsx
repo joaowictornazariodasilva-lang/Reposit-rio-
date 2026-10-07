@@ -80,7 +80,7 @@ function TiltImage({ product, sizes, priority }: { product: Product; sizes: stri
   );
 }
 
-function AddButton({ onAdd, label, compact }: { onAdd: () => void; label: string; compact?: boolean }) {
+function AddButton({ onAdd, label, compact }: { onAdd: (from: Element) => void; label: string; compact?: boolean }) {
   const [added, setAdded] = useState(false);
   const timer = useRef<number | undefined>(undefined);
   useEffect(() => () => window.clearTimeout(timer.current), []);
@@ -92,7 +92,7 @@ function AddButton({ onAdd, label, compact }: { onAdd: () => void; label: string
       onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        onAdd();
+        onAdd(e.currentTarget);
         setAdded(true);
         window.clearTimeout(timer.current);
         timer.current = window.setTimeout(() => setAdded(false), 1400);
@@ -127,7 +127,7 @@ export function ProductCard({ product, index, priority }: { product: Product; in
   const hasSizes = product.variants.length > 1;
 
   return (
-    <article className="group relative flex h-full flex-col">
+    <article data-fly-root className="group relative flex h-full flex-col">
       <Link {...href} className="block rounded-[var(--radius-lg)]" aria-label={`${product.name} — ver detalhes`}>
         <TiltImage product={product} priority={priority} sizes="(min-width: 1280px) 380px, (min-width: 768px) 45vw, 85vw" />
       </Link>
@@ -181,7 +181,7 @@ export function ProductCard({ product, index, priority }: { product: Product; in
           </div>
           <AddButton
             label={`Adicionar ${product.name}${hasSizes ? ` ${variant.label.toLowerCase()}` : ''} ao carrinho`}
-            onAdd={() => addToCart(product, { variantId, quantity: 1, addonOptionIds: [], notes: '' })}
+            onAdd={(from) => addToCart(product, { variantId, quantity: 1, addonOptionIds: [], notes: '' }, from)}
           />
         </div>
       </div>
@@ -195,7 +195,7 @@ export function ProductRow({ product }: { product: Product }) {
   const hasOptions = product.variants.length > 1 || product.addonGroupIds.length > 0;
 
   return (
-    <article className="relative flex gap-4 py-5">
+    <article data-fly-root className="relative flex gap-4 py-5">
       <div className="min-w-0 flex-1">
         <h3 className="font-display text-[1.3125rem] leading-tight text-ink">
           <Link {...href} className="after:absolute after:inset-0 after:content-['']">
@@ -225,7 +225,7 @@ export function ProductRow({ product }: { product: Product }) {
               <Plus className="size-5" strokeWidth={2.5} aria-hidden />
             </Link>
           ) : (
-            <AddButton compact label={`Adicionar ${product.name} ao carrinho`} onAdd={() => addToCart(product, { variantId: product.variants[0]!.id, quantity: 1, addonOptionIds: [], notes: '' })} />
+            <AddButton compact label={`Adicionar ${product.name} ao carrinho`} onAdd={(from) => addToCart(product, { variantId: product.variants[0]!.id, quantity: 1, addonOptionIds: [], notes: '' }, from)} />
           )}
         </div>
       </div>
@@ -251,7 +251,7 @@ function drinkTint(slug: string) {
 export function DrinkRow({ product }: { product: Product }) {
   const variant = product.variants[0]!;
   return (
-    <article className="flex items-center gap-4 py-3.5">
+    <article data-fly-root className="flex items-center gap-4 py-3.5">
       {product.image ? (
         <Picture src={product.image} alt="" sizes="56px" className="size-14 shrink-0 rounded-[var(--radius-md)]" />
       ) : (
@@ -264,7 +264,7 @@ export function DrinkRow({ product }: { product: Product }) {
         <p className="mt-0.5 text-[0.8125rem] text-ink-muted">{product.shortDescription}</p>
       </div>
       <p className="tabular shrink-0 font-semibold text-ink">{formatBRL(variant.price)}</p>
-      <AddButton compact label={`Adicionar ${product.name} ao carrinho`} onAdd={() => addToCart(product, { variantId: variant.id, quantity: 1, addonOptionIds: [], notes: '' })} />
+      <AddButton compact label={`Adicionar ${product.name} ao carrinho`} onAdd={(from) => addToCart(product, { variantId: variant.id, quantity: 1, addonOptionIds: [], notes: '' }, from)} />
     </article>
   );
 }

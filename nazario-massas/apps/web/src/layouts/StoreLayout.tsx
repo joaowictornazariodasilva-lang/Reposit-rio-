@@ -1,4 +1,5 @@
-import { Suspense, useEffect } from 'react';
+import { Suspense, useEffect, useRef, type ReactNode } from 'react';
+import { m } from 'motion/react';
 import { Outlet, useLocation } from 'react-router';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { SiteFooter } from '@/components/layout/SiteFooter';
@@ -26,6 +27,24 @@ export function PageFallback() {
   );
 }
 
+/** Soft fade-up between pages; skipped on the very first paint so it never delays the LCP. */
+function PageTransition({ id, children }: { id: string; children: ReactNode }) {
+  const first = useRef(true);
+  useEffect(() => {
+    first.current = false;
+  }, []);
+  return (
+    <m.div
+      key={id}
+      initial={first.current ? false : { opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+    >
+      {children}
+    </m.div>
+  );
+}
+
 export function StoreLayout() {
   const { pathname } = useLocation();
   const showCartBar = !pathname.startsWith('/checkout') && !pathname.startsWith('/pedido');
@@ -36,7 +55,9 @@ export function StoreLayout() {
       <main id="conteudo" className="flex-1" tabIndex={-1}>
         <ErrorBoundary resetKey={pathname}>
           <Suspense fallback={<PageFallback />}>
-            <Outlet />
+            <PageTransition id={pathname.split('/')[1] ?? ''}>
+              <Outlet />
+            </PageTransition>
           </Suspense>
         </ErrorBoundary>
       </main>

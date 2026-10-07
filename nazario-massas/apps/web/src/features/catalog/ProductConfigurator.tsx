@@ -1,5 +1,5 @@
-import { useId, useMemo, useState } from 'react';
-import { m } from 'motion/react';
+import { useId, useMemo, useRef, useState } from 'react';
+import { m, useReducedMotion } from 'motion/react';
 import { priceLine, type AddonGroup, type Product } from '@nazario/shared';
 import { Button } from '@/components/ui/Button';
 import { CheckCard, RadioCards } from '@/components/ui/Choice';
@@ -92,6 +92,13 @@ export function ProductConfigurator({ product, onAdded, layout }: { product: Pro
   const [notes, setNotes] = useState('');
   const [quantity, setQuantity] = useState(1);
   const notesId = useId();
+  const imageRef = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion();
+
+  // Pizzas grow with the chosen size (25 → 30 → 35 cm) so the difference is felt, not just read.
+  const variantIndex = Math.max(0, product.variants.findIndex((v) => v.id === variantId));
+  const diameter = product.variants[variantIndex]?.detail?.match(/(\d+)\s*cm/)?.[1];
+  const sizeScale = diameter && product.variants.length > 1 ? 0.8 + (0.2 * variantIndex) / (product.variants.length - 1) : 1;
 
   const addonOptionIds = Object.values(picked).flat();
   const priced = useMemo(() => {
@@ -112,28 +119,49 @@ export function ProductConfigurator({ product, onAdded, layout }: { product: Pro
 
   const submit = () => {
     if (!priced || missingRequired) return;
-    addToCart(product, { variantId, quantity, addonOptionIds, notes });
+    addToCart(product, { variantId, quantity, addonOptionIds, notes }, imageRef.current);
     onAdded?.();
   };
 
   return (
     <div className={cn('grid min-h-0 flex-1', layout === 'sheet' ? 'md:h-full md:grid-cols-[1fr_1.1fr] md:grid-rows-[minmax(0,1fr)]' : 'gap-10 lg:grid-cols-[1fr_1fr] lg:gap-16')}>
-      <div className={cn('relative', layout === 'sheet' ? 'bg-flour-deep md:h-full md:overflow-hidden' : '')}>
+      <div ref={imageRef} data-fly-root className={cn('relative', layout === 'sheet' ? 'bg-flour-deep md:h-full md:overflow-hidden' : '')}>
         <m.div
           initial={{ scale: 1.06, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           className={cn(layout === 'sheet' ? 'md:h-full' : 'lg:sticky lg:top-28')}
         >
-          <Picture
-            src={product.image}
-            alt={product.imageAlt ?? product.name}
-            priority
-            sizes={layout === 'sheet' ? '(min-width: 768px) 30rem, 100vw' : '(min-width: 1024px) 40vw, 100vw'}
-            className={cn(
-              layout === 'sheet' ? 'aspect-[4/3] md:aspect-auto md:h-full' : 'aspect-square rounded-[var(--radius-xl)]',
+          <div className={cn('relative overflow-hidden', layout === 'sheet' ? 'md:h-full' : 'rounded-[var(--radius-xl)] bg-flour-deep')}>
+            <m.div
+              animate={{ scale: sizeScale, rotate: diameter ? (variantIndex - 1) * 4 : 0 }}
+              transition={reduce ? { duration: 0 } : { type: 'spring', stiffness: 160, damping: 20 }}
+              className={cn('will-change-transform', layout === 'sheet' && 'md:h-full')}
+              style={{ borderRadius: sizeScale < 1 ? 'var(--radius-xl)' : undefined }}
+            >
+              <Picture
+                src={product.image}
+                alt={product.imageAlt ?? product.name}
+                priority
+                sizes={layout === 'sheet' ? '(min-width: 768px) 30rem, 100vw' : '(min-width: 1024px) 40vw, 100vw'}
+                className={cn(
+                  layout === 'sheet' ? 'aspect-[4/3] md:aspect-auto md:h-full' : 'aspect-square',
+                  diameter && 'overflow-hidden rounded-[var(--radius-xl)]',
+                )}
+              />
+            </m.div>
+            {diameter && (
+              <div
+                aria-hidden
+                className="absolute right-4 bottom-4 flex items-baseline gap-1 rounded-full bg-oven/85 px-4 py-2 font-display text-flour backdrop-blur"
+              >
+                <span className="text-3xl leading-none tracking-[-0.03em]">
+                  <AnimatedText value={diameter} />
+                </span>
+                <span className="text-sm text-ash">cm</span>
+              </div>
             )}
-          />
+          </div>
         </m.div>
       </div>
 

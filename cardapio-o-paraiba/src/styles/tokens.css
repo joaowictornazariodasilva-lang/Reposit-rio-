@@ -1,0 +1,78 @@
+/*
+ * Tokens — "Folheto de cordel".
+ * Contrastes calculados (WCAG 2.x) e verificados em src/lib/contraste.test.ts.
+ * Toda cor de texto sobre paper / paper-raised / paper-deep fica ≥ 4,5:1.
+ */
+:root {
+  color-scheme: light;
+
+  /* Papel */
+  --paper: #f5eddc;
+  --paper-raised: #fbf6ec;
+  --paper-deep: #eadfc8;
+  --line: #d6c8ac;
+
+  /* Tinta */
+  --ink: #1e1913; /* 14,98:1 no papel */
+  --ink-soft: #4a4034; /* 8,69:1 */
+  --ink-muted: #6b5d4c; /* 5,47:1 — 4,82:1 no paper-deep */
+  --ink-on-dark-muted: #b9a98f; /* 7,59:1 sobre ink */
+
+  /* Cores do sertão */
+  --urucum: #a3341a; /* vermelho de urucum: 5,89:1 no papel, papel sobre ele 5,89:1 */
+  --urucum-deep: #85290f; /* hover/pressionado: 7,77:1 */
+  --anil: #1f4468; /* azul de anil: 8,65:1 */
+  --sol: #e8b23a; /* só como preenchimento; tinta sobre ele 9,02:1 */
+  --mandacaru: #35583a; /* "aberto agora": 6,91:1 */
+
+  /* Tipografia */
+  --font-display: 'Alfa Slab One', 'Rockwell', 'Georgia', serif;
+  --font-body: 'Work Sans Variable', 'Work Sans', system-ui, sans-serif;
+
+  --text-xs: 0.75rem; /* 12 — rótulos em caixa alta */
+  --text-sm: 0.875rem; /* 14 */
+  --text-base: 1rem; /* 16 */
+  --text-md: 1.125rem; /* 18 — nome do prato */
+  --text-lg: 1.375rem; /* 22 */
+  --text-xl: 1.75rem; /* 28 — título de seção */
+  --text-2xl: clamp(2.75rem, 11vw, 4.5rem); /* nome da casa */
+
+  /* Espaço (base 4) */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.25rem;
+  --s-6: 1.5rem;
+  --s-8: 2rem;
+  --s-10: 2.5rem;
+  --s-12: 3rem;
+  --s-16: 4rem;
+
+  /* Forma: xilogravura não tem cantos macios — raio pequeno, borda de tinta */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-pill: 999px;
+  --border: 2px solid var(--ink);
+  --border-thin: 1px solid var(--line);
+
+  /* Sombra "carimbo": deslocada, sem blur */
+  --shadow-stamp: 4px 4px 0 var(--ink);
+  --shadow-stamp-sm: 2px 2px 0 var(--ink);
+
+  /* Layout */
+  --gutter: 1rem;
+  --nav-height: 3.25rem;
+  --content-max: 72rem;
+
+  /* Motion */
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur-fast: 150ms;
+  --dur: 220ms;
+}
+
+@media (min-width: 48rem) {
+  :root {
+    --gutter: 2rem;
+  }
+}

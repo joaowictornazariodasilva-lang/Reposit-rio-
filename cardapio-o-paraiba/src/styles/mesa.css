@@ -1,0 +1,137 @@
+.mesa__barra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  max-width: 52rem;
+  margin: var(--s-6) auto;
+  padding: 0 var(--gutter);
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+}
+
+.mesa__barra code {
+  font-size: 0.95em;
+}
+
+.folha {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--s-6);
+  padding: 0 var(--gutter) var(--s-10);
+}
+
+.cartao {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 105mm;
+  max-width: 100%;
+  min-height: 148mm;
+  padding: 9mm 8mm 7mm;
+  border: 2px solid var(--ink);
+  background: var(--paper-raised);
+  text-align: center;
+  break-inside: avoid;
+}
+
+.cartao::before {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border: 1px solid var(--ink);
+  pointer-events: none;
+}
+
+.cartao__arte {
+  position: relative;
+  width: 36mm;
+  height: 22mm;
+}
+
+.cartao__sol {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 17mm;
+}
+
+.cartao__mandacaru {
+  position: absolute;
+  bottom: 0;
+  left: 2mm;
+  width: 15mm;
+}
+
+.cartao__sobretitulo {
+  margin-top: 3mm;
+  font-size: 8pt;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.cartao__nome {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 30pt;
+  line-height: 1;
+}
+
+.cartao__chamada {
+  margin-top: 3mm;
+  font-weight: 600;
+}
+
+.cartao__qr {
+  width: 52mm;
+  height: 52mm;
+  margin-top: 4mm;
+  padding: 3mm;
+  border: 2px solid var(--ink);
+  background: var(--paper-raised);
+}
+
+.cartao__qr svg {
+  width: 100%;
+  height: 100%;
+}
+
+.cartao__url {
+  margin-top: 2mm;
+  font-size: 9pt;
+  font-weight: 600;
+  word-break: break-all;
+}
+
+.cartao__rodape {
+  margin-top: auto;
+  padding-top: 3mm;
+  font-size: 8pt;
+  color: var(--ink-soft);
+}
+
+@media print {
+  @page {
+    size: A5 landscape;
+    margin: 0;
+  }
+  body {
+    background: none;
+  }
+  .mesa__barra {
+    display: none;
+  }
+  .folha {
+    flex-wrap: nowrap;
+    gap: 0;
+    padding: 0;
+  }
+  .cartao {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

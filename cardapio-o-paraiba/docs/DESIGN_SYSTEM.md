@@ -73,6 +73,16 @@ minuto) · `OQuePedir` (carrossel com snap no celular, 3 colunas no desktop) ·
 / `LinhaItem` / `Preco` / etiquetas · `RegrasDaCasa` · `Historia` · `Info` ·
 cartão de mesa com QR (`mesa.html`).
 
+Pedido (`components/Pedido.tsx`, lógica pura e testada em `lib/pedido.ts`):
+`ControleQuantidade` (botão "Adicionar" → seletor − n + em tinta; o foco
+acompanha a troca), `BarraPedido` (fixa embaixo no celular; no desktop fica na
+coluna da capa para não cobrir o cardápio), `PainelPedido` (`<dialog>` nativo:
+folha de baixo no celular, gaveta à direita no desktop; etapas Itens → Seus
+dados → WhatsApp; erros inline com `aria-invalid` e foco no primeiro campo).
+Opções (modalidade, pagamento) são pílulas de rádio. O botão do WhatsApp usa
+`mandacaru` (papel sobre ele 7,47:1) em vez do verde da marca, para ficar na
+paleta.
+
 ## Motion
 
 Só `transform`/`opacity`: pulso do ponto "aberto", hover dos botões

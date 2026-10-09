@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "build:artefato": "node scripts/build-artefato.mjs"
   },
   "engines": {
     "node": ">=20"

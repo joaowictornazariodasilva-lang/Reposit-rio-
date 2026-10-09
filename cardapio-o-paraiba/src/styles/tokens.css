@@ -23,7 +23,11 @@
   --urucum-deep: #85290f; /* hover/pressionado: 7,77:1 */
   --anil: #1f4468; /* azul de anil: 8,65:1 */
   --sol: #e8b23a; /* só como preenchimento; tinta sobre ele 9,02:1 */
-  --mandacaru: #35583a; /* "aberto agora": 6,91:1 */
+  --mandacaru: #35583a; /* "aberto agora" e botão do WhatsApp: 6,91:1; papel sobre ele 7,47:1 */
+  --mandacaru-deep: #284530; /* hover do WhatsApp */
+
+  /* Véu atrás do painel do pedido */
+  --veu: rgb(30 25 19 / 0.55);
 
   /* Tipografia */
   --font-display: 'Alfa Slab One', 'Rockwell', 'Georgia', serif;
@@ -63,6 +67,9 @@
   /* Layout */
   --gutter: 1rem;
   --nav-height: 3.25rem;
+  --barra-pedido: 4.5rem;
+  --topo-seguro: env(safe-area-inset-top, 0px);
+  --base-segura: env(safe-area-inset-bottom, 0px);
   --content-max: 72rem;
 
   /* Motion */

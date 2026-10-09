@@ -5,6 +5,7 @@ import '@fontsource-variable/work-sans/wght.css';
 import './styles/tokens.css';
 import './styles/base.css';
 import './styles/app.css';
+import './styles/pedido.css';
 import { App } from './App';
 
 createRoot(document.getElementById('root')!).render(

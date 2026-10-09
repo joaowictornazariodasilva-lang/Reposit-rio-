@@ -18,7 +18,9 @@ const pares: [string, string][] = [
   ['paper-raised', 'urucum-deep'], // botão primário em hover
   ['paper', 'ink'], // faixa de categoria, botão ativo da barra
   ['ink-on-dark-muted', 'ink'], // resumo da categoria
-  ['ink', 'sol'], // cartões "O que pedir", etiqueta "mais pedido"
+  ['ink', 'sol'], // cartões "O que pedir", etiqueta "mais pedido", contador da barra
+  ['paper-raised', 'mandacaru'], // botão do WhatsApp
+  ['paper-raised', 'mandacaru-deep'], // botão do WhatsApp em hover
 ];
 
 describe('contraste dos tokens (WCAG AA, texto normal ≥ 4,5:1)', () => {

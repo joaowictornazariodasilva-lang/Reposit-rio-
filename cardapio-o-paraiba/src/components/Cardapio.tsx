@@ -3,6 +3,7 @@ import { regrasDaCasa } from '../data/cardapio';
 import { MODO_PREVIA } from '../data/restaurante';
 import { formatarPreco, precoCurto } from '../lib/preco';
 import { Panela } from './Xilo';
+import { ControleQuantidade } from './Pedido';
 
 const ROTULO_ETIQUETA: Record<Etiqueta, string> = {
   'mais-pedido': 'Mais pedido',
@@ -35,16 +36,21 @@ function LinhaItem({ item }: { item: Item }) {
         <Preco item={item} />
       </div>
       <p className="item__descricao">{item.descricao}</p>
-      {(item.etiquetas?.length || aConfirmar) && (
-        <ul className="item__etiquetas" aria-label="Observações">
-          {item.etiquetas?.map((e) => (
-            <li key={e} className={`etiqueta etiqueta--${e}`}>
-              {ROTULO_ETIQUETA[e]}
-            </li>
-          ))}
-          {aConfirmar && <li className="etiqueta etiqueta--confirmar">Preço a confirmar</li>}
-        </ul>
-      )}
+      <div className="item__base">
+        {(item.etiquetas?.length || aConfirmar) ? (
+          <ul className="item__etiquetas" aria-label="Observações">
+            {item.etiquetas?.map((e) => (
+              <li key={e} className={`etiqueta etiqueta--${e}`}>
+                {ROTULO_ETIQUETA[e]}
+              </li>
+            ))}
+            {aConfirmar && <li className="etiqueta etiqueta--confirmar">Preço a confirmar</li>}
+          </ul>
+        ) : (
+          <span />
+        )}
+        <ControleQuantidade item={item} />
+      </div>
     </li>
   );
 }

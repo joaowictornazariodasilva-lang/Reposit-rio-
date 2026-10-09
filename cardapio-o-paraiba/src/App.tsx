@@ -1,8 +1,10 @@
 import { cardapio, destaques } from './data/cardapio';
 import { MODO_PREVIA, restaurante } from './data/restaurante';
 import { resumoExpediente } from './lib/horario';
+import { mascararTelefone } from './lib/pedido';
 import { Preco, SecaoCategoria } from './components/Cardapio';
 import { NavCategorias } from './components/NavCategorias';
+import { BarraPedido, ControleQuantidade, PainelPedido, PedidoProvider } from './components/Pedido';
 import { Status } from './components/Status';
 import { Mandacaru, Sol } from './components/Xilo';
 
@@ -47,17 +49,20 @@ function OQuePedir() {
       <h2 id="destaques-titulo" className="destaques__titulo">
         O que pedir
       </h2>
-      <p className="destaques__sub">Os três que fizeram a fama da casa.</p>
+      <p className="destaques__sub">Os três que fizeram a fama da casa. Toque em adicionar e mande o pedido pelo WhatsApp.</p>
       <ol className="destaques__lista">
         {pratosDestaque.map((item, i) => (
           <li key={item.id} className="destaque">
-            <a className="destaque__link" href={`#item-${item.id}`}>
-              <span className="destaque__numero" aria-hidden="true">
-                {i + 1}
-              </span>
-              <span className="destaque__nome">{item.nome}</span>
-              <Preco item={item} />
+            <span className="destaque__numero" aria-hidden="true">
+              {i + 1}
+            </span>
+            <a className="destaque__nome" href={`#item-${item.id}`}>
+              {item.nome}
             </a>
+            <div className="destaque__base">
+              <Preco item={item} />
+              <ControleQuantidade item={item} variante="destaque" />
+            </div>
           </li>
         ))}
       </ol>
@@ -117,7 +122,7 @@ function Info() {
         </a>
         {whatsapp && (
           <a className="botao" href={`https://wa.me/${whatsapp}`} target="_blank" rel="noopener noreferrer">
-            WhatsApp
+            WhatsApp {mascararTelefone(whatsapp)}
           </a>
         )}
         <a className="botao" href={instagram.url} target="_blank" rel="noopener noreferrer">
@@ -130,7 +135,7 @@ function Info() {
 
 export function App() {
   return (
-    <>
+    <PedidoProvider>
       <a className="pular" href="#cardapio">
         Pular para o cardápio
       </a>
@@ -160,6 +165,8 @@ export function App() {
           </footer>
         </main>
       </div>
-    </>
+      <BarraPedido />
+      <PainelPedido />
+    </PedidoProvider>
   );
 }

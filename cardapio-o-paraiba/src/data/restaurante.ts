@@ -22,8 +22,13 @@ export const restaurante = {
   mapsUrl:
     'https://www.google.com/maps/search/?api=1&query=Rua+Tenente+Barbosa%2C+128+-+Alto+da+Balan%C3%A7a%2C+Fortaleza+-+CE',
   instagram: { usuario: 'restauranteoparaiba', url: 'https://www.instagram.com/restauranteoparaiba/' },
-  /** Número de WhatsApp com DDI+DDD só com dígitos (ex.: '5585999999999'). Vazio = botão oculto. */
-  whatsapp: '',
+  /**
+   * WhatsApp que recebe os pedidos: DDI + DDD + número, só dígitos.
+   * ATENÇÃO: (85) 98705-4152 é o número de TESTE — troque pelo da casa antes de publicar.
+   */
+  whatsapp: '5585987054152',
+  /** Formas de pedido oferecidas no carrinho. Tire 'entrega' se a casa não entregar. */
+  modalidades: ['salao', 'retirada', 'entrega'] as const,
   timeZone: 'America/Fortaleza',
   expediente: [0, 1, 2, 3, 4, 5, 6].map((dia) => ({ dia, abre: '08:00', fecha: '15:00' })) as Expediente[],
   historia: [

@@ -18,6 +18,8 @@ export type Item = {
   prefixoPreco?: string;
   etiquetas?: Etiqueta[];
   verificado: boolean;
+  /** `false` = aparece no cardápio mas não entra no carrinho (ex.: self-service, montado no salão). */
+  pedivel?: boolean;
 };
 
 export type Categoria = {
@@ -86,6 +88,7 @@ export const cardapio: Categoria[] = [
         preco: 3500,
         prefixoPreco: 'a partir de',
         verificado: true,
+        pedivel: false,
       },
     ],
   },
@@ -134,3 +137,8 @@ export const regrasDaCasa = [
   { titulo: 'Repetir é liberado', texto: 'Acompanhamento pode repetir à vontade.' },
   { titulo: 'Desperdício: R$ 5', texto: 'Se sobrar comida no prato, é cobrada uma taxa de R$ 5.' },
 ];
+
+/** Índice id → item, usado pelo carrinho para buscar nome e preço sempre do cardápio atual. */
+export const catalogo: ReadonlyMap<string, Item> = new Map(
+  cardapio.flatMap((c) => c.itens.map((i) => [i.id, i] as const)),
+);

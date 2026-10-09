@@ -28,7 +28,7 @@
 
 .capa__moldura {
   position: relative;
-  padding: var(--s-6) var(--s-5) var(--s-6);
+  padding: var(--s-5) var(--s-5) var(--s-5);
   border: var(--border);
   background: var(--paper-raised);
   box-shadow: var(--shadow-stamp);
@@ -46,23 +46,30 @@
 
 .capa__arte {
   position: relative;
-  width: 11rem;
-  height: 8.5rem;
-  margin: 0 auto var(--s-3);
+  width: 8.5rem;
+  height: 6.5rem;
+  margin: 0 auto var(--s-2);
+}
+
+@media (min-width: 40rem) {
+  .capa__arte {
+    width: 11rem;
+    height: 8.5rem;
+  }
 }
 
 .capa__sol {
   position: absolute;
   top: 0;
   right: 0;
-  width: 5.5rem;
+  width: 50%;
 }
 
 .capa__mandacaru {
   position: absolute;
   bottom: 0;
-  left: 0.5rem;
-  width: 5.25rem;
+  left: 4%;
+  width: 48%;
 }
 
 .capa__sobretitulo {
@@ -202,48 +209,52 @@
 
 .destaque {
   scroll-snap-align: start;
-}
-
-.destaque__link {
   display: grid;
   grid-template-columns: auto 1fr;
-  grid-template-rows: auto auto;
+  grid-template-rows: 1fr auto;
   column-gap: var(--s-3);
-  align-items: baseline;
-  height: 100%;
-  min-height: 7rem;
+  row-gap: var(--s-3);
+  min-height: 8.5rem;
   padding: var(--s-4);
   border: var(--border);
   border-radius: var(--radius-md);
   background: var(--sol);
   box-shadow: var(--shadow-stamp);
-  text-decoration: none;
-  transition: transform var(--dur-fast) var(--ease);
-}
-
-@media (hover: hover) {
-  .destaque__link:hover {
-    transform: translate(-2px, -2px);
-  }
 }
 
 .destaque__numero {
-  grid-row: span 2;
   font-family: var(--font-display);
   font-size: 3rem;
-  line-height: 0.9;
+  line-height: 0.85;
 }
 
 .destaque__nome {
+  align-self: start;
   font-size: var(--text-md);
   font-weight: 700;
   line-height: 1.2;
+  text-decoration: none;
+  text-wrap: balance;
+}
+
+@media (hover: hover) {
+  .destaque__nome:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+.destaque__base {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
 }
 
 /* Sobre o amarelo o urucum não passa de 4,5:1 — preço em tinta. */
 .destaque .preco {
   color: var(--ink);
-  align-self: end;
 }
 
 /* ───────────── Barra de categorias ───────────── */
@@ -254,7 +265,7 @@
 
 .nav-categorias {
   position: sticky;
-  top: 0;
+  top: var(--topo-seguro);
   z-index: 10;
   margin: 0 calc(var(--gutter) * -1);
   background: var(--paper);
@@ -433,11 +444,19 @@
   font-size: 0.9375rem;
 }
 
+.item__base {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  margin-top: var(--s-3);
+}
+
 .item__etiquetas {
   display: flex;
   flex-wrap: wrap;
   gap: var(--s-2);
-  margin-top: var(--s-2);
+  min-width: 0;
 }
 
 .etiqueta {
@@ -481,7 +500,7 @@
 }
 
 .preco__moeda {
-  margin-right: 0.15em;
+  margin-right: 0.22em;
   font-size: 0.6em;
 }
 
@@ -637,8 +656,13 @@
 
 .rodape {
   margin-top: var(--s-10);
-  padding: var(--s-6) 0 calc(var(--s-8) + env(safe-area-inset-bottom));
+  padding: var(--s-6) 0 calc(var(--s-8) + var(--base-segura));
   border-top: var(--border-thin);
   font-size: var(--text-sm);
   color: var(--ink-muted);
+}
+
+/* A barra do pedido cobre o fim da página: abre espaço para o rodapé. */
+body:has(.barra-pedido) .rodape {
+  padding-bottom: calc(var(--barra-pedido) + var(--s-8) + var(--base-segura));
 }

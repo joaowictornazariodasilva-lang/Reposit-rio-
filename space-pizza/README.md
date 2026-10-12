@@ -4,6 +4,10 @@
 base64. Funciona offline e abre em qualquer navegador (inclusive direto do
 WhatsApp, do e-mail ou de um pendrive). Tamanho: ~1,2 MB.
 
+`demo-online.html` é a versão para abrir por link (publicada como página privada).
+Ela tem `SO_PREVIA = true`: o botão de enviar mostra a mensagem do pedido na tela
+e não abre o WhatsApp da pizzaria. A faixa diz "Demonstração não oficial".
+
 ## Editar preços, sabores e configurações
 
 Abra `index.html` em qualquer editor de texto. Logo no começo do `<script>`
@@ -11,6 +15,7 @@ fica o bloco **DADOS DO CARDÁPIO**:
 
 | Variável | O que muda |
 |---|---|
+| `SO_PREVIA` | `true` mostra a mensagem do pedido na tela em vez de abrir o WhatsApp (bom para testar) |
 | `DEMO` | `true` mostra a faixa "Demonstração · preços de exemplo"; `false` esconde |
 | `LOJA` | nome, WhatsApp, endereço, horário (`abre`/`fecha`) e `taxaEntrega` (`null` = "a combinar") |
 | `PIZZAS`, `DOCES`, `BEBIDAS` | nome, descrição, preço, foto e selo ("Mais pedida", "Picante", "Da casa") |

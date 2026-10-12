@@ -40,7 +40,7 @@
 *,*::before,*::after{box-sizing:border-box}
 [hidden]{display:none!important}
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:72px}
-body{margin:0;background:var(--cream);color:var(--ink);font:400 16px/1.5 var(--font-body);-webkit-font-smoothing:antialiased}
+body{margin:0;color-scheme:light;background:var(--cream);color:var(--ink);font:400 16px/1.5 var(--font-body);-webkit-font-smoothing:antialiased}
 img{display:block;max-width:100%}
 button,input,textarea,select{font:inherit;color:inherit}
 button{cursor:pointer;border:0;background:none;padding:0}
@@ -74,7 +74,7 @@ button{cursor:pointer;border:0;background:none;padding:0}
 .hero__stars{position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(1.5px 1.5px at 12% 18%,#fff8 50%,transparent 51%),radial-gradient(1px 1px at 78% 12%,#fff9 50%,transparent 51%),radial-gradient(1.5px 1.5px at 88% 34%,#fff7 50%,transparent 51%),radial-gradient(1px 1px at 30% 8%,#fff8 50%,transparent 51%),radial-gradient(1px 1px at 60% 22%,#fff6 50%,transparent 51%)}
 
 /* ===== Abas fixas ===== */
-.tabs{position:sticky;top:0;z-index:30;background:rgba(255,247,236,.94);backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line)}
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:rgba(255,247,236,.94);backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line)}
 .tabs__row{display:flex;gap:8px;padding:10px var(--gutter);max-width:var(--maxw);margin:0 auto}
 .tab{flex:1;min-height:44px;border-radius:var(--r-pill);font-weight:700;font-size:15px;color:var(--muted);background:transparent;border:1.5px solid var(--line);transition:background-color .2s var(--ease),color .2s var(--ease),border-color .2s var(--ease)}
 .tab[aria-current="true"]{background:var(--tomato);border-color:var(--tomato);color:#fff;box-shadow:0 4px 12px rgba(185,28,28,.28)}
@@ -212,6 +212,8 @@ textarea:focus,input:focus{outline:none;border-color:var(--tomato);box-shadow:0 
 .seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .seg .opt{justify-content:center}
 .notice{margin-top:12px;padding:10px 12px;border-radius:var(--r-md);background:var(--gold-soft);font-size:14px;border:1px solid #F0D7A3}
+
+.wa-preview{white-space:pre-wrap;word-break:break-word;font:400 15px/1.5 var(--font-body);background:#DCF8C6;color:#111B21;padding:14px 16px;border-radius:14px 14px 14px 4px;box-shadow:var(--shadow-sm);margin:12px 0 20px}
 
 /* Toast */
 .toast{position:fixed;left:50%;top:14px;z-index:80;transform:translate(-50%,-140%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:var(--r-pill);font-weight:500;font-size:14px;box-shadow:var(--shadow-md);transition:transform .3s var(--ease);display:flex;gap:8px;align-items:center}
@@ -429,6 +431,20 @@ textarea:focus,input:focus{outline:none;border-color:var(--tomato);box-shadow:0 
   </div>
 </section>
 
+<!-- Prévia da mensagem (modo SO_PREVIA) -->
+<section class="sheet" id="previewSheet" role="dialog" aria-modal="true" aria-labelledby="previewTitle">
+  <div class="sheet__top">
+    <h2 id="previewTitle">Mensagem do pedido</h2>
+    <button class="iconbtn" data-close aria-label="Fechar"><svg class="ico" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  </div>
+  <div class="sheet__scroll">
+    <div class="sheet__body">
+      <p class="notice" style="margin-top:0">Demonstração: no cardápio oficial, este texto vai pronto para o WhatsApp da pizzaria. Aqui nada foi enviado.</p>
+      <pre class="wa-preview" id="previewText"></pre>
+    </div>
+  </div>
+</section>
+
 <div class="toast" id="toast" role="status" aria-live="polite"><svg class="ico" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg><span id="toastText"></span></div>
 
 <script>
@@ -436,6 +452,7 @@ textarea:focus,input:focus{outline:none;border-color:var(--tomato);box-shadow:0 
    DADOS DO CARDÁPIO — edite aqui (preços de EXEMPLO)
    ===================================================================== */
 const DEMO = true; // false = esconde a faixa "Demonstração · preços de exemplo"
+const SO_PREVIA = false; // true = em vez de abrir o WhatsApp, mostra na tela a mensagem do pedido (para testes)
 
 const LOJA = {
   nome: "Space Pizza",
@@ -757,9 +774,18 @@ $("#nextBtn").addEventListener("click", () => {
   const pedido = collect();
   if (!pedido) return;
   store.set("cliente", { nome: pedido.nome, endereco: pedido.endereco, referencia: pedido.referencia });
-  const url = `https://wa.me/${LOJA.whatsapp}?text=${encodeURIComponent(buildMessage(pedido))}`;
-  window.open(url, "_blank", "noopener");
+  const msg = buildMessage(pedido);
+  if (SO_PREVIA) { showPreview(msg); return; }
+  window.open(`https://wa.me/${LOJA.whatsapp}?text=${encodeURIComponent(msg)}`, "_blank", "noopener");
 });
+
+function showPreview(msg) {
+  $("#previewText").textContent = msg;
+  $("#cartSheet").classList.remove("is-on");
+  $("#previewSheet").classList.add("is-on");
+  $("#previewSheet .sheet__scroll").scrollTop = 0;
+  setTimeout(() => $("#previewSheet [data-close]").focus(), 50);
+}
 
 function modo() { return ($("input[name=modo]:checked") || {}).value || "entrega"; }
 function pag() { return ($("input[name=pag]:checked") || {}).value || ""; }

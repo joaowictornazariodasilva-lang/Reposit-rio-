@@ -17,3 +17,14 @@ assert "/*IMAGES*/" in tpl and "/*FONTS*/" in tpl
 out = tpl.replace("/*FONTS*/", fonts).replace("/*IMAGES*/", json.dumps(imgs, separators=(",", ":")))
 (root / "index.html").write_text(out, encoding="utf-8")
 print(f"index.html: {len(out.encode()) / 1024:.0f} KB, {len(imgs)} fotos")
+
+# Versão para link online de demonstração: não envia nada, só mostra a mensagem
+demo = (out.replace("const SO_PREVIA = false;", "const SO_PREVIA = true;", 1)
+           .replace(">Demonstração · preços de exemplo<",
+                    ">Demonstração não oficial · proposta de cardápio digital · preços de exemplo<", 1))
+assert demo != out
+# A página publicada recebe <html>/<head>/<body> da plataforma: mantém só título, metas úteis, estilo e corpo
+head_ini = demo.index("<title>")
+demo = demo[head_ini:].replace("</head>\n<body>\n", "", 1).replace("</body>\n</html>\n", "", 1)
+(root / "demo-online.html").write_text(demo, encoding="utf-8")
+print("demo-online.html: pedidos só em prévia (SO_PREVIA = true)")

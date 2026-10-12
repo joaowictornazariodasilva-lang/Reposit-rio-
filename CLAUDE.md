@@ -13,6 +13,7 @@ Leia isto antes de qualquer tarefa.
 | `ui-ux-pro-max-skill/` | Repositório original do UI UX Pro Max (dados em `src/ui-ux-pro-max/data/*.csv`) | Fonte da skill acima |
 | `ruflo/` | Ruflo (orquestração multiagente / swarms, AgentDB, MCP) | **Não ativo por padrão.** Só para tarefas grandes que realmente se beneficiem de vários agentes: `cd ruflo && npx ruflo init` |
 | `nazario-massas/` | E-commerce Nazário Massas (React + Hono) | Ver `nazario-massas/README.md` |
+| `space-pizza/` | Cardápio digital Space Pizza (HTML único, offline, pedido via WhatsApp) | Ver `space-pizza/README.md`; editar `src/` e rodar `python3 build.py` |
 
 ## Regras para projetos de site/app
 

@@ -44,7 +44,7 @@ export function NovoClienteSheet({ aberto, aoFechar }: { aberto: boolean; aoFech
         descricao="Só o nome é obrigatório. O resto você completa depois."
         rodape={
           <>
-            <Button variant="ghost" onClick={aoFechar} className="mr-auto">
+            <Button variant="ghost" onClick={aoFechar} className="mr-auto max-sm:hidden">
               Cancelar
             </Button>
             <Button variant="secondary" onClick={() => salvar("equipamento")} disabled={pendente}>

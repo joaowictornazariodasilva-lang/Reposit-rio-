@@ -26,7 +26,8 @@ async function criar(): Promise<Db> {
     const { PGlite } = await import("@electric-sql/pglite");
     const { drizzle } = await import("drizzle-orm/pglite");
     const { migrate } = await import("drizzle-orm/pglite/migrator");
-    const dir = process.env.PGLITE_DIR ?? path.join(process.cwd(), ".data/pglite");
+    // Na Vercel só /tmp é gravável (e é apagado de tempos em tempos): serve só para demonstração.
+    const dir = process.env.PGLITE_DIR ?? (process.env.VERCEL ? "/tmp/pglite" : path.join(process.cwd(), ".data/pglite"));
     if (!dir.startsWith("memory://")) await (await import("node:fs/promises")).mkdir(dir, { recursive: true });
     const pg = await PGlite.create(dir);
     const pdb = drizzle(pg, { schema });

@@ -28,6 +28,14 @@ Entre como (senha de todos: `brisa2026`) — a tela de login tem atalhos:
 
 `npm run db:seed -- --reset` recria o banco de demonstração.
 
+### Colocar no ar (Vercel)
+
+1. Em vercel.com → **Add New… → Project** → importe este repositório.
+2. Em **Root Directory** escolha `gestao-ar` (o framework Next.js é detectado sozinho).
+3. Em **Storage → Create Database → Neon (Postgres)**, conecte ao projeto: isso cria a
+   variável `DATABASE_URL`. Sem banco o site até abre, mas os dados se perdem a cada reinício.
+4. **Deploy**. Na primeira visita o banco é criado com os dados de demonstração.
+
 ### Produção
 
 1. Postgres (Supabase, Neon, RDS…): defina `DATABASE_URL` — as migrações rodam sozinhas.

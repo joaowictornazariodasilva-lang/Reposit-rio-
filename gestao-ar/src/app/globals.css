@@ -1,0 +1,222 @@
+@import "tailwindcss";
+
+/*
+ * Tokens de design — fonte única de cores, tipografia, raios, sombras e motion.
+ * Contrastes calculados (WCAG 2.1) estão em docs/DESIGN_SYSTEM.md.
+ * Conceito "Termostato": frio (petróleo/ciano) = em dia; quente (laranja) = pede ação.
+ */
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --bg: #f4f7f8;
+  --surface: #ffffff;
+  --surface-2: #eef3f4;
+  --surface-3: #e4ecee;
+  --border: #dce4e7;
+  --border-strong: #c3d0d5;
+  --fg: #0e1b21;
+  --fg-muted: #4a5b63;
+  --fg-subtle: #5e6e75;
+
+  --primary: #0b5f6e;
+  --primary-hover: #094e5b;
+  --primary-fg: #ffffff;
+  --primary-soft: #e1f0f2;
+  --primary-soft-fg: #0a4f5c;
+
+  --accent: #c4410f;
+  --accent-hover: #a8370c;
+  --accent-fg: #ffffff;
+  --accent-soft: #fdeee6;
+  --accent-soft-fg: #8f300b;
+
+  --success: #166534;
+  --success-soft: #e7f5ec;
+  --warning: #8a4b06;
+  --warning-soft: #fdf2dc;
+  --danger: #b42318;
+  --danger-soft: #fdecea;
+  --info: #1e4e9c;
+  --info-soft: #e6eefb;
+
+  --ring: #0b5f6e;
+  --overlay: rgb(14 27 33 / 0.45);
+
+  --shadow-xs: 0 1px 2px rgb(14 40 50 / 0.06);
+  --shadow-sm: 0 1px 2px rgb(14 40 50 / 0.06), 0 2px 6px -1px rgb(14 40 50 / 0.06);
+  --shadow-md: 0 2px 4px rgb(14 40 50 / 0.05), 0 8px 20px -4px rgb(14 40 50 / 0.1);
+  --shadow-lg: 0 4px 8px rgb(14 40 50 / 0.06), 0 20px 44px -8px rgb(14 40 50 / 0.18);
+
+  color-scheme: light;
+}
+
+.dark {
+  --bg: #0a1215;
+  --surface: #111c20;
+  --surface-2: #0d171a;
+  --surface-3: #18262b;
+  --border: #22343b;
+  --border-strong: #31474f;
+  --fg: #e6eef0;
+  --fg-muted: #9db0b7;
+  --fg-subtle: #869aa2;
+
+  --primary: #38bdd0;
+  --primary-hover: #5ccadb;
+  --primary-fg: #04161a;
+  --primary-soft: #0f2e35;
+  --primary-soft-fg: #7fd8e5;
+
+  --accent: #fb8a3c;
+  --accent-hover: #fca064;
+  --accent-fg: #1a0a02;
+  --accent-soft: #3a1d0b;
+  --accent-soft-fg: #fdba8c;
+
+  --success: #6ee7a0;
+  --success-soft: #0f2a1c;
+  --warning: #fcc56b;
+  --warning-soft: #2e2208;
+  --danger: #fca5a0;
+  --danger-soft: #341311;
+  --info: #9cc0ff;
+  --info-soft: #13213a;
+
+  --ring: #5ccadb;
+  --overlay: rgb(0 0 0 / 0.6);
+
+  --shadow-xs: 0 1px 2px rgb(0 0 0 / 0.3);
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.35), 0 2px 6px -1px rgb(0 0 0 / 0.3);
+  --shadow-md: 0 2px 4px rgb(0 0 0 / 0.3), 0 8px 20px -4px rgb(0 0 0 / 0.45);
+  --shadow-lg: 0 4px 8px rgb(0 0 0 / 0.35), 0 20px 44px -8px rgb(0 0 0 / 0.6);
+
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-subtle: var(--fg-subtle);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-fg: var(--primary-fg);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-soft-fg: var(--primary-soft-fg);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-soft-fg: var(--accent-soft-fg);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --color-ring: var(--ring);
+  --color-overlay: var(--overlay);
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+
+  /* Escala tipográfica (1.2) — 12/13/14/16/19/23/28/34 */
+  --text-2xs: 0.75rem;
+  --text-xs: 0.8125rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.1875rem;
+  --text-xl: 1.4375rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: 2.125rem;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --animate-fade-in: fade-in 160ms var(--ease-out);
+  --animate-slide-in-right: slide-in-right 220ms var(--ease-out);
+  --animate-slide-in-left: slide-in-left 220ms var(--ease-out);
+  --animate-pop-in: pop-in 160ms var(--ease-out);
+  --animate-shimmer: shimmer 1.4s linear infinite;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+}
+@keyframes slide-in-right {
+  from { transform: translateX(24px); opacity: 0; }
+}
+@keyframes slide-in-left {
+  from { transform: translateX(-24px); opacity: 0; }
+}
+@keyframes pop-in {
+  from { transform: translateY(4px) scale(0.98); opacity: 0; }
+}
+@keyframes shimmer {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection {
+    background: var(--primary-soft);
+    color: var(--primary-soft-fg);
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  summary,
+  label[for] {
+    cursor: pointer;
+  }
+  /* Métricas e tabelas sempre com números tabulares */
+  .tabular,
+  table {
+    font-variant-numeric: tabular-nums;
+  }
+  input[type="search"]::-webkit-search-cancel-button {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}

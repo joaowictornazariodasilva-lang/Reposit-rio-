@@ -13,6 +13,7 @@ Leia isto antes de qualquer tarefa.
 | `ui-ux-pro-max-skill/` | Repositório original do UI UX Pro Max (dados em `src/ui-ux-pro-max/data/*.csv`) | Fonte da skill acima |
 | `ruflo/` | Ruflo (orquestração multiagente / swarms, AgentDB, MCP) | **Não ativo por padrão.** Só para tarefas grandes que realmente se beneficiem de vários agentes: `cd ruflo && npx ruflo init` |
 | `nazario-massas/` | E-commerce Nazário Massas (React + Hono) | Ver `nazario-massas/README.md` |
+| `gestao-ar/` | Sistema de gestão para empresa de ar condicionado (Next.js 16 + Drizzle/Postgres) | Ver `gestao-ar/README.md` e `gestao-ar/docs/DESIGN_SYSTEM.md` |
 
 ## Regras para projetos de site/app
 
